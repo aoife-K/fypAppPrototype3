@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "541970973785",
+    "project_id": "copd-app-0210",
+    "storage_bucket": "copd-app-0210.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541970973785:android:b608cecfeeeb1bfbde1d48",
+        "android_client_info": {
+          "package_name": "com.example.copd_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "541970973785-f9gb150hm0fro0svgfvj01mqj44hk1ev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxNk6oj-YBJWHE7fDj1CsJnUM0FXzFsS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "541970973785-f9gb150hm0fro0svgfvj01mqj44hk1ev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

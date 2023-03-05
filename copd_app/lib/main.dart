@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_kit/survey_kit.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:copd_app/custom_expansion_tile.dart';
 
 import 'contacts.dart';
@@ -12,8 +15,12 @@ import 'reports.dart';
 import 'diary.dart';
 import 'checkIn.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseFirestore db = FirebaseFirestore.instance;
 }
 
 class MyApp extends StatelessWidget {
