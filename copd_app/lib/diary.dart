@@ -96,26 +96,6 @@ class _DiaryPageState extends State<DiaryPage> {
     return emptyData;
   }
 
-// Future<void> _updateJsonFile(String title, double newSubtitle, DateTime date) async {
-//   final DateFormat formatter = DateFormat('yyyy-MM-dd');
-//   final String dateEntered = formatter.format(date);
-//   final file = File('/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
-//   if (await file.exists()) {
-//     final jsonContent = await file.readAsString();
-//     final List<dynamic> data = jsonDecode(jsonContent);
-//     for (var i = 0; i < data.length; i++) {
-//       final item = data[i];
-//       final itemDate = DateTime.parse(item['date']);
-//       if (itemDate.isAtSameMomentAs(date)) {
-//         data[i][title] = newSubtitle;
-//         data[i]['date'] = DateFormat('yyyy-MM-dd').format(date);
-//         await file.writeAsString(jsonEncode(data));
-//         return;
-//       }
-//     }
-//   }
-// }
-
   List<String> _getEventsForDay(DateTime day) {
     // Implementation example
     List<String> symptoms = [
@@ -274,12 +254,8 @@ class _DiaryPageState extends State<DiaryPage> {
                           onSubtitleChanged(('${value.keys.elementAt(index)}'),
                               newSubtitleValue);
                         },
+                        date: _focusedDay,
                       ),
-                      // ListTile(
-                      //   onTap: () => print('${value[index]}'),
-                      //   title: Text('${value[index]}'),
-                      //   trailing: Icon(Icons.edit),
-                      // ),
                     );
                   },
                 );
@@ -298,15 +274,86 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 }
 
+// class EditableListTile extends StatefulWidget {
+//   final String title;
+//   final double subtitle;
+//   final ValueChanged<double> onSubtitleChanged;
+
+//   const EditableListTile({
+//     required this.title,
+//     required this.subtitle,
+//     required this.onSubtitleChanged,
+//   });
+
+//   @override
+//   _EditableListTileState createState() => _EditableListTileState();
+// }
+
+// class _EditableListTileState extends State<EditableListTile> {
+//   bool isEditing = false;
+//   late TextEditingController _textEditingController;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _textEditingController =
+//         TextEditingController(text: widget.subtitle.toString());
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListTile(
+//       title: Text(widget.title,
+//           style: TextStyle(
+//             color: Colors.black,
+//           )),
+//       subtitle: isEditing
+//           ? TextField(
+//               controller: _textEditingController,
+//               decoration: InputDecoration(
+//                 hintText: widget.subtitle.toString(),
+//               ),
+//               onChanged: (value) {
+//                 widget.onSubtitleChanged(
+//                     double.tryParse(value) ?? widget.subtitle);
+//               },
+//               style: TextStyle(
+//                 color: Color.fromARGB(255, 140, 142, 140),
+//               ))
+//           : Text(widget.subtitle.toString(),
+//               style: TextStyle(
+//                 color: Color.fromARGB(255, 49, 50, 49),
+//                 fontSize: 18,
+//               )),
+//       trailing: IconButton(
+//         icon: Icon(isEditing ? Icons.check : Icons.edit),
+//         onPressed: () {
+//           setState(() {
+//             isEditing = !isEditing;
+//           });
+//           if (!isEditing) {
+//             widget.onSubtitleChanged(
+//                 double.tryParse(_textEditingController.text) ??
+//                     widget.subtitle);
+//           }
+//         },
+//       ),
+//     );
+//   }
+// }
+
+//******************** */
 class EditableListTile extends StatefulWidget {
   final String title;
   final double subtitle;
   final ValueChanged<double> onSubtitleChanged;
+  final DateTime date;
 
   const EditableListTile({
     required this.title,
     required this.subtitle,
     required this.onSubtitleChanged,
+    required this.date,
   });
 
   @override
@@ -356,21 +403,47 @@ class _EditableListTileState extends State<EditableListTile> {
             isEditing = !isEditing;
           });
           if (!isEditing) {
-            widget.onSubtitleChanged(
-                double.tryParse(_textEditingController.text) ??
-                    widget.subtitle);
+            final newSubtitle =
+                double.tryParse(_textEditingController.text) ?? widget.subtitle;
+            widget.onSubtitleChanged(newSubtitle);
+            _updateJsonFile(widget.title, newSubtitle, widget.date);
           }
         },
       ),
     );
   }
+
+  Future<void> _updateJsonFile(
+      String title, double newSubtitle, DateTime date) async {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String dateEntered = formatter.format(date);
+    final file = File(
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
+    if (await file.exists()) {
+      final jsonContent = await file.readAsString();
+      final List<dynamic> data = jsonDecode(jsonContent);
+      for (var i = 0; i < data.length; i++) {
+        final item = data[i];
+        final itemDate = DateTime.parse(item['date']);
+        if (itemDate.isAtSameMomentAs(date)) {
+          data[i][title] = newSubtitle;
+          data[i]['date'] = DateFormat('yyyy-MM-dd').format(date);
+          await file.writeAsString(jsonEncode(data));
+          return;
+        }
+      }
+    }
+  }
 }
+
+
 
 // class EditableListTile extends StatefulWidget {
 //   final String title;
 //   final double subtitle;
+//   final DateTime date;
 
-//   const EditableListTile({required this.title, required this.subtitle});
+//   const EditableListTile({required this.title, required this.subtitle, required this.date});
 
 //   @override
 //   _EditableListTileState createState() => _EditableListTileState();
@@ -408,9 +481,37 @@ class _EditableListTileState extends State<EditableListTile> {
 //           setState(() {
 //             isEditing = !isEditing;
 //           });
+//           if (!isEditing) {
+//             // final newSubtitle =
+//             //     double.tryParse(_textEditingController.text) ?? widget.subtitle;
+//             //widget.onSubtitleChanged(newSubtitle);
+//             _updateJsonFile(widget.title, newSubtitle, widget.date);
+//           }
 //         },
 //       ),
 //     );
+//   }
+
+//   Future<void> _updateJsonFile(
+//       String title, double newSubtitle, DateTime date) async {
+//     final DateFormat formatter = DateFormat('yyyy-MM-dd');
+//     final String dateEntered = formatter.format(date);
+//     final file = File(
+//         '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
+//     if (await file.exists()) {
+//       final jsonContent = await file.readAsString();
+//       final List<dynamic> data = jsonDecode(jsonContent);
+//       for (var i = 0; i < data.length; i++) {
+//         final item = data[i];
+//         final itemDate = DateTime.parse(item['date']);
+//         if (itemDate.isAtSameMomentAs(date)) {
+//           data[i][title] = newSubtitle;
+//           data[i]['date'] = DateFormat('yyyy-MM-dd').format(date);
+//           await file.writeAsString(jsonEncode(data));
+//           return;
+//         }
+//       }
+//     }
 //   }
 // }
 
