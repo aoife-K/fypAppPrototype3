@@ -256,8 +256,11 @@ class _CheckInPageState extends State<CheckInPage> {
 
   void writeJsonFile(Map<String, dynamic> data) {
     final String date = data['date'];
+    final double total = data['total'];
     final File jsonFile = File(
         '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/cat.json');
+    final File symptomsFile = File(
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
 
     // Read the existing data from the file
     final String jsonString =
@@ -278,6 +281,27 @@ class _CheckInPageState extends State<CheckInPage> {
 
     // Write the updated data to the file
     jsonFile.writeAsStringSync(jsonEncode(jsonData));
+
+    final String symptomsString =
+        symptomsFile.existsSync() ? symptomsFile.readAsStringSync() : '';
+    final List<dynamic> symptomsJson =
+        symptomsString.isNotEmpty ? jsonDecode(symptomsString) : [];
+
+    // Check if an object with the same date already exists in the symptoms data
+    final int symptomsIndex =
+        symptomsJson.indexWhere((obj) => obj['date'] == date);
+
+    if (symptomsIndex >= 0) {
+      // Replace the cat_score value in the existing object with the total value from the new data
+      symptomsJson[symptomsIndex]['cat_score'] = total;
+    }
+    // else {
+    //   // Add a new object with the date and total values
+    //   symptomsJson.add({'date': date, 'cat_score': total});
+    // }
+
+    // Write the updated data to the symptoms file
+    symptomsFile.writeAsStringSync(jsonEncode(symptomsJson));
   }
 
   Future<Task> getSampleTask() {

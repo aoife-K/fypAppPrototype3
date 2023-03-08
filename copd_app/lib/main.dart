@@ -6,6 +6,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'dart:io';
 //import 'package:copd_app/custom_expansion_tile.dart';
 
 import 'contacts.dart';
@@ -242,6 +244,11 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 fontSize: 25.0,
               )),
           SizedBox(height: 40),
+          // Container(
+          //   child: isTodayInJsonFile()
+          //       ? Text('This text is displayed when isTrue is true')
+          //       : Text('This text is displayed when isTrue is false'),
+          // ),
           Card(
             //elevation: 3,
             color: Color.fromARGB(255, 249, 251, 251),
@@ -252,22 +259,65 @@ class _GeneratorPageState extends State<GeneratorPage> {
               width: 400,
               height: 100,
               child: Center(
-                // onDoubleTap: () {
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => CheckInPage(),
-                //     ),
-                //   );
-                // },
-                child: Text(
-                  "Your daily check-in is complete!",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 30, 148, 168),
-                    fontSize: 18.0,
+                  // onDoubleTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => CheckInPage(),
+                  //     ),
+                  //   );
+                  // },
+                  child: GestureDetector(
+                onTap: () {
+                  if (!isTodayInJsonFile()) {
+                    // Replace with your navigation code
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CheckInPage(),
+                      ),
+                    );
+                  }
+                },
+                child: isTodayInJsonFile()
+                    ? Text(
+                        "Your daily check-in is complete!",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 30, 148, 168),
+                          fontSize: 18.0,
+                        ),
+                      )
+                    : Text(
+                        "Your daily check-in is incomplete! Tap here to complete it.",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 234, 105, 96),
+                          fontSize: 18.0,
+                        ),
+                      ),
+              )
+                  // child: isTodayInJsonFile()
+                  //     ? Text(
+                  //         "Your daily check-in is complete!",
+                  //         style: TextStyle(
+                  //           color: Color.fromARGB(255, 30, 148, 168),
+                  //           fontSize: 18.0,
+                  //         ),
+                  //       )
+                  //     : Text(
+                  //         "Your daily check-in is incomplete! Tap here to complete it.",
+                  //         style: TextStyle(
+                  //           color: Color.fromARGB(255, 234, 105, 96),
+                  //           fontSize: 18.0,
+                  //         ),
+                  //       ),
+                  // child: Text(
+                  //   "Your daily check-in is complete!",
+                  //   style: TextStyle(
+                  //     color: Color.fromARGB(255, 30, 148, 168),
+                  //     fontSize: 18.0,
+                  //   ),
+                  // ),
                   ),
-                ),
-              ),
             ),
           ),
           SizedBox(height: 60),
@@ -370,6 +420,28 @@ class _GeneratorPageState extends State<GeneratorPage> {
         ],
       ),
     );
+  }
+
+  bool isTodayInJsonFile() {
+    // Read the contents of the JSON file
+    const String filePath =
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/cat.json';
+    final fileContents = File(filePath).readAsStringSync();
+
+    // Parse the JSON contents into a List of maps
+    final data = jsonDecode(fileContents).cast<Map<String, dynamic>>();
+
+    // Get today's date in the format "YYYY-MM-DD"
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+
+    // Check if today's date is present in any of the objects
+    for (final obj in data) {
+      if (obj['date'] == today) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 

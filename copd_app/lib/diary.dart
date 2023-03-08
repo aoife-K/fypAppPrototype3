@@ -108,11 +108,11 @@ class _DiaryPageState extends State<DiaryPage> {
     ];
     var hashMap = Map<String, double>();
     hashMap['CAT'] = 0;
-    hashMap['Weight (kg)'] = 30;
-    hashMap['Steps'] = 4048;
-    hashMap['SpO2 (%)'] = 98;
-    hashMap['Temperature (°C)'] = 37.5;
-    hashMap['FEV1 (%)'] = 80;
+    hashMap['Weight (kg)'] = 0;
+    hashMap['Steps'] = 0;
+    hashMap['SpO2 (%)'] = 0;
+    hashMap['Temperature (°C)'] = 0;
+    hashMap['FEV1 (%)'] = 0;
     return symptoms;
   }
 
@@ -120,11 +120,11 @@ class _DiaryPageState extends State<DiaryPage> {
     // Implementation example
     var hashMap = Map<String, double>();
     hashMap['CAT Score'] = 0;
-    hashMap['Weight (kg)'] = 30;
-    hashMap['Steps'] = 4048;
-    hashMap['SpO2 (%)'] = 98;
-    hashMap['Temperature (°C)'] = 37.5;
-    hashMap['FEV1 (%)'] = 80;
+    hashMap['Weight (kg)'] = 0;
+    hashMap['Steps'] = 0;
+    hashMap['SpO2 (%)'] = 0;
+    hashMap['Temperature (°C)'] = 0;
+    hashMap['FEV1 (%)'] = 0;
 
     //if day is after today, return empty map
     if (day.isAfter(DateTime.now())) {
@@ -415,6 +415,21 @@ class _EditableListTileState extends State<EditableListTile> {
 
   Future<void> _updateJsonFile(
       String title, double newSubtitle, DateTime date) async {
+    Map<String, dynamic> emptyData = {
+      'date': "",
+      'cat_score': 0,
+      'weight': 0,
+      'steps': 0,
+      'spo2': 0,
+      'temperature': 0,
+      'fev1': 0
+    };
+
+    if (emptyData.containsKey(title)) {
+      emptyData[title] = newSubtitle;
+      emptyData['date'] = date;
+    }
+
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String dateEntered = formatter.format(date);
     final file = File(
@@ -434,6 +449,54 @@ class _EditableListTileState extends State<EditableListTile> {
       }
     }
   }
+
+  // Future<void> _updateJsonFile(
+  //     String title, double newSubtitle, DateTime date) async {
+  //   Map<String, dynamic> emptyData = {
+  //     'date': "",
+  //     'cat_score': 0,
+  //     'weight': 0,
+  //     'steps': 0,
+  //     'spo2': 0,
+  //     'temperature': 0,
+  //     'fev1': 0
+  //   };
+
+  //   if (emptyData.containsKey(title)) {
+  //     emptyData[title] = newSubtitle;
+  //     emptyData['date'] = date;
+  //   }
+
+  //   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  //   final String dateEntered = formatter.format(date);
+  //   final file = File(
+  //       '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
+  //   if (await file.exists()) {
+  //     final jsonContent = await file.readAsString();
+  //     final List<dynamic> data = jsonDecode(jsonContent);
+  //     bool dateMatch = false;
+  //     for (var i = 0; i < data.length; i++) {
+  //       final item = data[i];
+  //       final itemDate = DateTime.parse(item['date']);
+  //       if (itemDate.isAtSameMomentAs(date)) {
+  //         data[i][title] = newSubtitle;
+  //         data[i]['date'] = DateFormat('yyyy-MM-dd').format(date);
+  //         await file.writeAsString(jsonEncode(data));
+  //         dateMatch = true;
+  //         break;
+  //       }
+  //     }
+  //     if (!dateMatch) {
+  //       emptyData['date'] = dateEntered;
+  //       data.add(emptyData);
+  //       await file.writeAsString(jsonEncode(data));
+  //     }
+  //   } else {
+  //     emptyData['date'] = dateEntered;
+  //     final data = [emptyData];
+  //     await file.writeAsString(jsonEncode(data));
+  //   }
+  // }
 }
 
 
