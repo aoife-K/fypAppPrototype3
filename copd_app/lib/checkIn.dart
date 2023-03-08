@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_kit/survey_kit.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:intl/intl.dart';
 
 class CheckInPage extends StatefulWidget {
   @override
@@ -26,6 +29,13 @@ class _CheckInPageState extends State<CheckInPage> {
                   return SurveyKit(
                     onResult: (SurveyResult result) {
                       print(result.finishReason);
+                      final jsonResult = surveyResultsToJson(result);
+                      // print the json-formatted results
+                      //debugPrint(jsonEncode(jsonResult));
+                      //print(jsonResult.length);
+                      Map<String, dynamic> resultMap = jsonToMap(jsonResult);
+                      print(resultMap);
+                      writeJsonFile(resultMap);
                       Navigator.pushNamed(context, '/');
                     },
                     task: task,
@@ -149,6 +159,125 @@ class _CheckInPageState extends State<CheckInPage> {
         ),
       ),
     );
+  }
+
+  List<Map<String, dynamic>> surveyResultsToJson(SurveyResult result) {
+    List<Map<String, dynamic>> resultList = [];
+    int index = 1;
+    for (var step in result.results) {
+      for (var r in step.results) {
+        var resultObject = <String, dynamic>{
+          "finishReason": result.finishReason.name,
+          "date": r.endDate.toString().substring(0, 10),
+          "id": "result$index",
+          "result": r.result is BooleanResult
+              ? ((r.result as BooleanResult) == BooleanResult.POSITIVE
+                  ? true
+                  : (r.result as BooleanResult) == BooleanResult.NEGATIVE
+                      ? false
+                      : null)
+              : r.result is TimeOfDay
+                  ? '${(r.result as TimeOfDay).hour}:${(r.result as TimeOfDay).minute}'
+                  : r.result is DateTime
+                      ? (r.result as DateTime).toIso8601String()
+                      : r.result,
+          //"valueIdentifier": r.valueIdentifier,
+        };
+        resultList.add(resultObject);
+        index++;
+      }
+    }
+    return resultList;
+  }
+
+  // Map<String, dynamic> jsonToMap(List<Map<String, dynamic>> jsonList) {
+  //   DateTime firstDate = DateTime.parse(jsonList.first['date']);
+  //   print(firstDate);
+  //   Map<String, dynamic> resultMap = {};
+  //   for (var json in jsonList) {
+  //     String id = json['id'];
+  //     dynamic result = json['result'];
+  //     resultMap[id] = result;
+  //   }
+  //   return resultMap;
+  // }
+
+  Map<String, dynamic> jsonToMap(List<Map<String, dynamic>> jsonList) {
+    DateTime firstDate = DateTime.parse(jsonList.first['date']);
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(firstDate);
+    Map<String, dynamic> resultMap = {};
+    double total = 0;
+    resultMap['date'] = formatted;
+    for (var json in jsonList) {
+      String id = json['id'];
+      if (id == 'result1' || id == 'result10') {
+        continue;
+      }
+      dynamic result = json['result'];
+      switch (id) {
+        case 'result2':
+          id = 'cough';
+          break;
+        case 'result3':
+          id = 'phlegm';
+          break;
+        case 'result4':
+          id = 'tightness';
+          break;
+        case 'result5':
+          id = 'breathlessness';
+          break;
+        case 'result6':
+          id = 'activities';
+          break;
+        case 'result7':
+          id = 'confidence';
+          break;
+        case 'result8':
+          id = 'sleep';
+          break;
+        case 'result9':
+          id = 'energy';
+          break;
+        default:
+          continue;
+      }
+      if (result is double) {
+        //resultMap[id] = result;
+        total += result;
+      }
+
+      resultMap[id] = result;
+    }
+    resultMap['total'] = total;
+    return resultMap;
+  }
+
+  void writeJsonFile(Map<String, dynamic> data) {
+    final String date = data['date'];
+    final File jsonFile = File(
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/cat.json');
+
+    // Read the existing data from the file
+    final String jsonString =
+        jsonFile.existsSync() ? jsonFile.readAsStringSync() : '';
+    final List<dynamic> jsonData =
+        jsonString.isNotEmpty ? jsonDecode(jsonString) : [];
+
+    // Check if an object with the same date already exists in the data
+    final int existingIndex = jsonData.indexWhere((obj) => obj['date'] == date);
+
+    if (existingIndex >= 0) {
+      // Replace the existing object with the new data
+      jsonData[existingIndex] = data;
+    } else {
+      // Add the new data as a new object
+      jsonData.add(data);
+    }
+
+    // Write the updated data to the file
+    jsonFile.writeAsStringSync(jsonEncode(jsonData));
   }
 
   Future<Task> getSampleTask() {
