@@ -18,7 +18,12 @@ import 'diary.dart';
 import 'checkIn.dart';
 
 void main() async {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeModeNotifier(),
+      child: MyApp(),
+    ),
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -34,13 +39,18 @@ class MyApp extends StatelessWidget {
       create: (context) => MyAppState(),
       child: MaterialApp(
         title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.white,
-          ),
-          //backgroundColor: Colors.white,
-        ),
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: Provider.of<ThemeModeNotifier>(context).isDarkMode
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        // ThemeData(
+        //   useMaterial3: true,
+        //   colorScheme: ColorScheme.fromSeed(
+        //     seedColor: Colors.white,
+        //   ),
+        //   //backgroundColor: Colors.white,
+        // ),
         home: MyHomePage(),
       ),
     );
@@ -235,6 +245,14 @@ class _GeneratorPageState extends State<GeneratorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Consumer<ThemeModeNotifier>(
+            builder: (context, notifier, child) => Switch(
+              value: notifier.isDarkMode,
+              onChanged: (value) {
+                notifier.toggleThemeMode();
+              },
+            ),
+          ),
           SizedBox(
             height: 20,
           ),
@@ -442,6 +460,17 @@ class _GeneratorPageState extends State<GeneratorPage> {
     }
 
     return false;
+  }
+}
+
+class ThemeModeNotifier with ChangeNotifier {
+  bool _isDarkMode = false;
+
+  bool get isDarkMode => _isDarkMode;
+
+  void toggleThemeMode() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
   }
 }
 
