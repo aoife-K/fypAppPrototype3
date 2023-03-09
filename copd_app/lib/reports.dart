@@ -23,101 +23,108 @@ class _ReportsPageState extends State<ReportsPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 60),
-          Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              BackButton(),
-              Padding(padding: EdgeInsets.only(left: 120)),
-              Text("Reports",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 91, 90, 90),
-                    fontSize: 25.0,
-                  )),
-            ],
-          ),
-          SizedBox(height: 10),
-          Text(
-              "This page will contain reports and trends from your symptom tracking data.\nHere are some samples of what the reports page will look like when detailed data is added in the future.",
-              style: TextStyle(
-                color: Color.fromARGB(255, 91, 90, 90),
-                fontSize: 15.0,
-              ),
-              textAlign: TextAlign.center),
-          SizedBox(height: 10),
-          Container(
-            margin: EdgeInsets.all(24),
-            child: BarChartSample6(),
-          ),
-          // AspectRatio(
-          //   aspectRatio: 1.6,
-          //   child: BarChartSample6(),
-          // ),
-          // SizedBox(height: 10),
-          // Container(
-          //   margin: EdgeInsets.all(24),
-          //   child: PointsLineChart(),
-          // ),
-          SizedBox(height: 50),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20.0),
-              ),
-              Text("Steps",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 91, 90, 90),
-                    fontSize: 18.0,
-                  )),
-            ],
-          ),
-          SizedBox(height: 20),
-          AspectRatio(
-            aspectRatio: 1.70,
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(18),
-                ),
-                //color: Color.fromARGB(255, 255, 255, 255),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 18,
-                  left: 12,
-                  top: 24,
-                  bottom: 12,
-                ),
-                child: LineChart(
-                  showAvg ? avgData() : mainData(),
-                ),
-              ),
+      child: SingleChildScrollView(
+        child: Column(
+          //mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 60),
+            Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                BackButton(),
+                Padding(padding: EdgeInsets.only(left: 120)),
+                Text("Reports",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 25.0,
+                    )),
+              ],
             ),
-          ),
-          SizedBox(
-            width: 60,
-            height: 34,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  showAvg = !showAvg;
-                });
-              },
-              child: Text(
-                'avg',
+            SizedBox(height: 10),
+            Text(
+                "This page will contain reports and trends from your symptom tracking data.\nHere are some samples of what the reports page will look like when detailed data is added in the future.",
                 style: TextStyle(
-                  fontSize: 12,
-                  color: showAvg
-                      ? Color.fromARGB(255, 19, 19, 19).withOpacity(0.5)
-                      : Color.fromARGB(255, 10, 10, 10),
+                  color: Color.fromARGB(255, 91, 90, 90),
+                  fontSize: 15.0,
+                ),
+                textAlign: TextAlign.center),
+            SizedBox(height: 10),
+            Container(
+              margin: EdgeInsets.all(24),
+              child: BarChartSample6(),
+            ),
+            SizedBox(height: 10),
+            Container(
+              margin: EdgeInsets.all(24),
+              child: BarChartSample6(),
+            ),
+            // AspectRatio(
+            //   aspectRatio: 1.6,
+            //   child: BarChartSample6(),
+            // ),
+            // SizedBox(height: 10),
+            // Container(
+            //   margin: EdgeInsets.all(24),
+            //   child: PointsLineChart(),
+            // ),
+            SizedBox(height: 50),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                ),
+                Text("Steps",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 18.0,
+                    )),
+              ],
+            ),
+            SizedBox(height: 20),
+            AspectRatio(
+              aspectRatio: 1.70,
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(18),
+                  ),
+                  //color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 18,
+                    left: 12,
+                    top: 24,
+                    bottom: 12,
+                  ),
+                  child: LineChart(
+                    showAvg ? avgData() : mainData(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            SizedBox(
+              width: 60,
+              height: 34,
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    showAvg = !showAvg;
+                  });
+                },
+                child: Text(
+                  'avg',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: showAvg
+                        ? Color.fromARGB(255, 19, 19, 19).withOpacity(0.5)
+                        : Color.fromARGB(255, 10, 10, 10),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

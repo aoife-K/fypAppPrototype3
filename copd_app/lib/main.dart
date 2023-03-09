@@ -16,6 +16,7 @@ import 'medication.dart';
 import 'reports.dart';
 import 'diary.dart';
 import 'checkIn.dart';
+import 'reportsNew.dart';
 
 void main() async {
   runApp(
@@ -276,6 +277,9 @@ class _GeneratorPageState extends State<GeneratorPage> {
             child: Container(
               width: 400,
               height: 100,
+              color: isTodayInJsonFile()
+                  ? Color.fromARGB(255, 199, 233, 235)
+                  : Color.fromARGB(255, 240, 210, 198),
               child: Center(
                   // onDoubleTap: () {
                   //   Navigator.push(
@@ -416,7 +420,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ReportsPage(),
+                  builder: (context) => NewReportsPage(),
                 ),
               );
             },
