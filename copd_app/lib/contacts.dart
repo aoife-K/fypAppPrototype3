@@ -14,6 +14,11 @@ class _ContactPageState extends State<ContactPage> {
   SampleItem? selectedMenu;
 
   List<Widget> _listOfWidgets = [];
+  final List<Contact> _contacts = [
+    Contact(name: 'John Doe', phone: '555-1234', email: 'johndoe@example.com'),
+    Contact(
+        name: 'Jane Smith', phone: '555-5678', email: 'janesmith@example.com'),
+  ];
 
   @override
   void initState() {
@@ -24,221 +29,290 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Contacts",
-              style: TextStyle(
-                color: Color.fromARGB(255, 91, 90, 90),
-                fontSize: 25.0,
-              )),
-          // FloatingActionButton(
-          //   onPressed: () {
-          //     setState(() {
-          //       print("fab clicked");
-          //       _addItemToList(); // new method
-          //     });
-          //   },
-          //   child: Text("+"),
-          //   backgroundColor: Colors.blue,
-          // ),
-          SizedBox(height: 60),
-          // ListTile(
-          //   title: Text('John Doe'),
-          //   subtitle: Text('Carer'),
-          //   leading: Icon(Icons.person),
-          //   trailing: Icon(Icons.more_vert),
-          // ),
-          ExpansionTile(
-            title: const Text('Jane Doe'),
-            subtitle: const Text('Physician'),
-            trailing: PopupMenuButton<SampleItem>(
-              initialValue: selectedMenu,
-              // Callback that sets the selected popup menu item.
-              onSelected: (SampleItem item) {
-                setState(() {
-                  selectedMenu = item;
-                });
-              },
-              itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<SampleItem>>[
-                const PopupMenuItem<SampleItem>(
-                  value: SampleItem.itemOne,
-                  child: Text('Edit'),
-                ),
-                const PopupMenuItem<SampleItem>(
-                  value: SampleItem.itemTwo,
-                  child: Text('Delete'),
-                ),
-                // const PopupMenuItem<SampleItem>(
-                //   value: SampleItem.itemThree,
-                //   child: Text('Item 3'),
-                // ),
-              ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 120),
+            Text("Contacts",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 91, 90, 90),
+                  fontSize: 25.0,
+                )),
+            IconButton(
+              onPressed: _addContact,
+              icon: Icon(Icons.add),
             ),
-            leading: Icon(
-              _customTileExpanded ? Icons.person : Icons.person,
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: ListView.builder(
+                itemCount: _contacts.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final contact = _contacts[index];
+
+                  return Container(
+                    height: 80.0,
+                    child: GestureDetector(
+                      onTap: () => _showOptionsDialog(context, index),
+                      child: ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text(contact.name),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(contact.phone),
+                            Text(contact.email),
+                          ],
+                        ),
+                        trailing: PopupMenuButton(
+                          itemBuilder: (BuildContext context) => [
+                            PopupMenuItem(
+                              child: Text('Edit'),
+                              value: 'edit',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Delete'),
+                              value: 'delete',
+                            ),
+                          ],
+                          onSelected: (String value) {
+                            if (value == 'edit') {
+                              _editContact(index);
+                            } else if (value == 'delete') {
+                              _deleteContact(index);
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-            children: const <Widget>[
-              ListTile(
-                  title:
-                      Text('Phone: 123-456-7890 \nEmail: janedoe@gmail.com')),
-            ],
-            // onExpansionChanged: (bool expanded) {
-            //   setState(() => _customTileExpanded = expanded);
-            // },
-          ),
-          ExpansionTile(
-            title: const Text('John Doe'),
-            subtitle: const Text('Carer'),
-            trailing: PopupMenuButton<SampleItem>(
-              initialValue: selectedMenu,
-              // Callback that sets the selected popup menu item.
-              onSelected: (SampleItem item) {
-                setState(() {
-                  selectedMenu = item;
-                });
-              },
-              itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<SampleItem>>[
-                const PopupMenuItem<SampleItem>(
-                  value: SampleItem.itemOne,
-                  child: Text('Edit'),
-                ),
-                const PopupMenuItem<SampleItem>(
-                  value: SampleItem.itemTwo,
-                  child: Text('Delete'),
-                ),
-                // const PopupMenuItem<SampleItem>(
-                //   value: SampleItem.itemThree,
-                //   child: Text('Item 3'),
-                // ),
-              ],
-            ),
-            leading: Icon(
-              _customTileExpanded ? Icons.person : Icons.person,
-            ),
-            children: const <Widget>[
-              ListTile(
-                  title:
-                      Text('Phone: 123-456-7890 \nEmail: johndoe@gmail.com')),
-            ],
-            onExpansionChanged: (bool expanded) {
-              setState(() => _customTileExpanded = expanded);
-            },
-            // onLongPress: () {
-            //   setState(() {
-            //     print("fab clicked");
-            //     _addItemToList(); // new method
-            //   });
-            // },
-          ),
-          for (var item in _listOfWidgets) item,
-          // ListTile(
-          //   title: Text('Add New Contact...'),
-          //   trailing: Icon(Icons.add),
-          //   onTap: () {
-          //     setState(() {
-          //       print("fab clicked");
-          //       _addItemToList(); // new method
-          //     });
-          //   },
-          // ),
-        ],
+            SizedBox(height: 60),
+          ],
+        ),
       ),
     );
   }
 
-  _addItemToList() {
-    //<Widget> _listOfWidgets = [];
-    List<Widget> tempList =
-        _listOfWidgets; // defining a new temporary list which will be equal to our other list
-    tempList.add(ExpansionTile(
-      title: const Text('New Contact'),
-      subtitle: const Text('Occupation'),
-      leading: Icon(Icons.person),
-      trailing: Icon(
-        _customTileExpanded ? Icons.more_vert : Icons.more_vert,
-      ),
-      children: const <Widget>[
-        ListTile(title: Text('Phone:\nEmail:')),
-      ],
-      onExpansionChanged: (bool expanded) {
-        setState(() => _customTileExpanded = expanded);
+  void _showOptionsDialog(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Contact Options'),
+          actions: [
+            TextButton(
+              child: Text('Edit'),
+              onPressed: () {
+                Navigator.pop(context);
+                _editContact(index);
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                setState(() {
+                  _contacts.removeAt(index);
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
       },
-    )); // adding a new item to the list
+    );
+  }
+
+  void _addContact() async {
+    final result = await showDialog<Contact>(
+      context: context,
+      builder: (BuildContext context) => _buildAddContactDialog(),
+    );
+
+    if (result != null) {
+      setState(() {
+        _contacts.add(result);
+      });
+    }
+  }
+
+  Widget _buildAddContactDialog() {
+    final nameController = TextEditingController();
+    final phoneController = TextEditingController();
+    final emailController = TextEditingController();
+
+    return AlertDialog(
+      title: Text('Add Contact'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+            ),
+          ),
+          TextField(
+            controller: phoneController,
+            decoration: InputDecoration(
+              labelText: 'Phone',
+            ),
+          ),
+          TextField(
+            controller: emailController,
+            decoration: InputDecoration(
+              labelText: 'Email',
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        ElevatedButton(
+          child: Text('Save'),
+          onPressed: () {
+            final name = nameController.text.trim();
+            final phone = phoneController.text.trim();
+            final email = emailController.text.trim();
+
+            if (name.isNotEmpty && phone.isNotEmpty) {
+              Navigator.of(context)
+                  .pop(Contact(name: name, phone: phone, email: email));
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  void _deleteContact(int index) {
     setState(() {
-      _listOfWidgets =
-          tempList; // this will trigger a rebuild of the ENTIRE widget, therefore adding our new item to the list!
+      _contacts.removeAt(index);
     });
+  }
+
+  void _editContact(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final nameController =
+            TextEditingController(text: _contacts[index].name);
+        final phoneController =
+            TextEditingController(text: _contacts[index].phone);
+        final emailController =
+            TextEditingController(text: _contacts[index].email);
+
+        return AlertDialog(
+          title: Text('Edit Contact'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                ),
+              ),
+              TextField(
+                controller: phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Phone',
+                ),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () => Navigator.pop(context),
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () {
+                final name = nameController.text;
+                final phone = phoneController.text;
+                final email = emailController.text;
+                final newContact =
+                    Contact(name: name, phone: phone, email: email);
+
+                setState(() {
+                  _contacts[index] = newContact;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter_contacts/flutter_contacts.dart';
+class Contact {
+  final String name;
+  final String phone;
+  final String email;
 
-// void main() => runApp(FlutterContactsExample());
+  Contact({
+    required this.name,
+    required this.phone,
+    required this.email,
+  });
+}
 
-// class FlutterContactsExample extends StatefulWidget {
-//   @override
-//   _FlutterContactsExampleState createState() => _FlutterContactsExampleState();
-// }
+class ContactWidget extends StatelessWidget {
+  final String name;
+  final String phone;
+  final String email;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
-// class _FlutterContactsExampleState extends State<FlutterContactsExample> {
-//   List<Contact>? _contacts;
-//   bool _permissionDenied = false;
+  ContactWidget({
+    required this.name,
+    required this.phone,
+    required this.email,
+    required this.onDelete,
+    required this.onEdit,
+  });
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchContacts();
-//   }
-
-//   Future _fetchContacts() async {
-//     if (!await FlutterContacts.requestPermission(readonly: true)) {
-//       setState(() => _permissionDenied = true);
-//     } else {
-//       final contacts = await FlutterContacts.getContacts();
-//       setState(() => _contacts = contacts);
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) => MaterialApp(
-//       home: Scaffold(
-//           appBar: AppBar(title: Text('flutter_contacts_example')),
-//           body: _body()));
-
-//   Widget _body() {
-//     if (_permissionDenied) return Center(child: Text('Permission denied'));
-//     if (_contacts == null) return Center(child: CircularProgressIndicator());
-//     return ListView.builder(
-//         itemCount: _contacts!.length,
-//         itemBuilder: (context, i) => ListTile(
-//             title: Text(_contacts![i].displayName),
-//             onTap: () async {
-//               final fullContact =
-//                   await FlutterContacts.getContact(_contacts![i].id);
-//               await Navigator.of(context).push(
-//                   MaterialPageRoute(builder: (_) => ContactPage(fullContact!)));
-//             }));
-//   }
-// }
-
-// class ContactPage extends StatelessWidget {
-//   final Contact contact;
-//   ContactPage(this.contact);
-
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//       appBar: AppBar(title: Text(contact.displayName)),
-//       body: Column(children: [
-//         Text('First name: ${contact.name.first}'),
-//         Text('Last name: ${contact.name.last}'),
-//         Text(
-//             'Phone number: ${contact.phones.isNotEmpty ? contact.phones.first.number : '(none)'}'),
-//         Text(
-//             'Email address: ${contact.emails.isNotEmpty ? contact.emails.first.address : '(none)'}'),
-//       ]));
-// }
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(child: Text(name[0])),
+      title: Text(name),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(phone),
+          Text(email),
+        ],
+      ),
+      trailing: PopupMenuButton(
+        itemBuilder: (BuildContext context) => [
+          PopupMenuItem(
+            child: Text('Edit'),
+            onTap: onEdit,
+          ),
+          PopupMenuItem(
+            child: Text('Delete'),
+            onTap: onDelete,
+          ),
+        ],
+        icon: Icon(Icons.more_vert),
+      ),
+    );
+  }
+}

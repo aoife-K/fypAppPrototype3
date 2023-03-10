@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+enum SampleItem { itemOne, itemTwo, itemThree }
+
 class MedicationsPage extends StatefulWidget {
   @override
   State<MedicationsPage> createState() => _MedicationsPageState();
@@ -11,12 +13,13 @@ class MedicationsPage extends StatefulWidget {
 
 class _MedicationsPageState extends State<MedicationsPage> {
   bool _isEnabled = false;
+  bool _customTileExpanded = false;
+  SampleItem? selectedMenu;
 
-  //var _listSection = List<Widget>();
   List<Widget> _listOfWidgets = [];
-  Map<String, dynamic> _medicationMap = {
-    "Symbicort Inhaler": "2 puffs twice daily"
-  };
+  final List<Medication> _medications = [
+    Medication(name: 'Symbicort Inhaler', dosage: '2 puffs daily'),
+  ];
 
   @override
   void initState() {
@@ -28,85 +31,263 @@ class _MedicationsPageState extends State<MedicationsPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Medication",
-              style: TextStyle(
-                color: Color.fromARGB(255, 91, 90, 90),
-                fontSize: 25.0,
-              )),
-          SizedBox(height: 60),
-          // ListTile(
-          //   title: Text("Symbicort Inhaler"),
-          //   subtitle: Text('Dosage: 2 puffs twice daily'),
-          //   trailing: Icon(Icons.edit),
-          // ),
-          // Wrap(children: [
-          //   ListView.builder(
-          //     itemCount: _medicationMap.length,
-          //     itemBuilder: (context, index) {
-          //       return EditableListTile(
-          //         title: _medicationMap.keys.elementAt(index),
-          //         subtitle: _medicationMap.values.elementAt(index),
-          //       );
-          //     },
-          //   ),
-          // ]),
-          //ListWidget(),
-          EditableListTile(
-              title: "Symbicort Inhaler", subtitle: "2 puffs twice daily"),
-          for (var item in _listOfWidgets) item,
-          ListTile(
-            title: Text('New Medication...'),
-            trailing: Icon(Icons.add),
-            onTap: () {
-              setState(() {
-                print("fab clicked");
-                _addItemToList(); // new method
-                //_getJsonData();
-              });
-            },
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 150),
+            Text("Medications",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 91, 90, 90),
+                  fontSize: 25.0,
+                )),
+            IconButton(
+              onPressed: _addMedication,
+              icon: Icon(Icons.add),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: ListView.builder(
+                itemCount: _medications.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final contact = _medications[index];
+
+                  return Container(
+                    height: 80.0,
+                    child: GestureDetector(
+                      onTap: () => _showOptionsDialog(context, index),
+                      child: ListTile(
+                        leading: Icon(Icons.medication),
+                        title: Text(contact.name),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(contact.dosage),
+                          ],
+                        ),
+                        trailing: PopupMenuButton(
+                          itemBuilder: (BuildContext context) => [
+                            PopupMenuItem(
+                              child: Text('Edit'),
+                              value: 'edit',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Delete'),
+                              value: 'delete',
+                            ),
+                          ],
+                          onSelected: (String value) {
+                            if (value == 'edit') {
+                              _editMedication(index);
+                            } else if (value == 'delete') {
+                              _deleteMedication(index);
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            // SizedBox(height: 60),
+            // for (var item in _listOfWidgets) item,
+            // ListTile(
+            //   title: Text('Add New Medication...'),
+            //   trailing: Icon(Icons.add),
+            //   onTap: () {
+            //     setState(() {
+            //       print("fab clicked");
+            //       _addItemToList(); // new method
+            //     });
+            //   },
+            // ),
+          ],
+        ),
       ),
     );
   }
 
-  _addItemToList() {
-    //<Widget> _listOfWidgets = [];
-    List<Widget> tempList =
-        _listOfWidgets; // defining a new temporary list which will be equal to our other list
-    tempList.add(EditableListTile(
-        title: "Medication...",
-        subtitle: "Dosage...")); // adding a new item to the list
+  // _addItemToList() {
+  //   //<Widget> _listOfWidgets = [];
+  //   List<Widget> tempList =
+  //       _listOfWidgets; // defining a new temporary list which will be equal to our other list
+  //   tempList.add(EditableListTile(
+  //     title: "Medication...",
+  //     subtitle: "Dosage...",
+  //     onDelete: deleteItem(0),
+  //   )); // adding a new item to the list
+
+  //   setState(() {
+  //     _listOfWidgets =
+  //         tempList; // this will trigger a rebuild of the ENTIRE widget, therefore adding our new item to the list!
+  //   });
+  // }
+
+  // VoidCallback deleteItem(int index) {
+  //   // setState(() {
+  //   //   _ListOfWidgets.removeAt(index);
+  //   // });
+  //   print("delete item called");
+  //   return () {
+  //     setState(() {
+  //       _listOfWidgets.removeAt(index);
+  //     });
+  //   };
+  // }
+
+  void _showOptionsDialog(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Medication Options'),
+          actions: [
+            TextButton(
+              child: Text('Edit'),
+              onPressed: () {
+                Navigator.pop(context);
+                _editMedication(index);
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                setState(() {
+                  _medications.removeAt(index);
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addMedication() async {
+    final result = await showDialog<Medication>(
+      context: context,
+      builder: (BuildContext context) => _buildAddMedicationDialog(),
+    );
+
+    if (result != null) {
+      setState(() {
+        _medications.add(result);
+      });
+    }
+  }
+
+  Widget _buildAddMedicationDialog() {
+    final nameController = TextEditingController();
+    final dosageController = TextEditingController();
+
+    return AlertDialog(
+      title: Text('Add Medication'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+            ),
+          ),
+          TextField(
+            controller: dosageController,
+            decoration: InputDecoration(
+              labelText: 'Dosage',
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          child: Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        ElevatedButton(
+          child: Text('Save'),
+          onPressed: () {
+            final name = nameController.text.trim();
+            final dosage = dosageController.text.trim();
+
+            if (name.isNotEmpty && dosage.isNotEmpty) {
+              Navigator.of(context).pop(Medication(name: name, dosage: dosage));
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  void _deleteMedication(int index) {
     setState(() {
-      _listOfWidgets =
-          tempList; // this will trigger a rebuild of the ENTIRE widget, therefore adding our new item to the list!
+      _medications.removeAt(index);
     });
   }
 
-  Map<String, String> _getJsonData() {
-    Map<String, String> emptyData = {};
-    File jsonFile = File(
-        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/medications.json');
-    jsonFile.existsSync();
-    String jsonString = jsonFile.readAsStringSync();
+  void _editMedication(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final nameController =
+            TextEditingController(text: _medications[index].name);
+        final dosageController =
+            TextEditingController(text: _medications[index].dosage);
 
-    List<dynamic> jsonData = jsonDecode(jsonString);
-    //Map<String, String> map = jsonData.asMap();
-    Map<String, String> map = Map.fromIterable(jsonData,
-        key: (item) => item['Medication'], value: (item) => item['Dosage']);
-    //print(map);
-    return map;
+        return AlertDialog(
+          title: Text('Edit Medication'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                ),
+              ),
+              TextField(
+                controller: dosageController,
+                decoration: InputDecoration(
+                  labelText: 'Dosage',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () => Navigator.pop(context),
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () {
+                final name = nameController.text;
+                final dosage = dosageController.text;
+                final newContact = Medication(name: name, dosage: dosage);
+
+                setState(() {
+                  _medications[index] = newContact;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
 class EditableListTile extends StatefulWidget {
   String title;
   String subtitle;
+  final VoidCallback onDelete;
 
-  EditableListTile({required this.title, required this.subtitle});
+  EditableListTile(
+      {required this.title, required this.subtitle, required this.onDelete});
 
   @override
   _EditableListTileState createState() => _EditableListTileState();
@@ -142,147 +323,75 @@ class _EditableListTileState extends State<EditableListTile> {
               },
             )
           : Text(widget.subtitle),
-      trailing: IconButton(
-        icon: Icon(Icons.edit),
-        onPressed: () {
-          setState(() {
-            isEditing = !isEditing;
-          });
-        },
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              setState(() {
+                isEditing = !isEditing;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              widget.onDelete();
+            },
+          ),
+        ],
       ),
     );
   }
 }
 
-class ListWidget extends StatefulWidget {
-  @override
-  _ListWidgetState createState() => _ListWidgetState();
+class Medication {
+  final String name;
+  final String dosage;
+
+  Medication({
+    required this.name,
+    required this.dosage,
+  });
 }
 
-class _ListWidgetState extends State<ListWidget> {
-  List<Map<String, String>> items = [
-    {'title': 'Item 1', 'subtitle': 'Subtitle for item 1'},
-    {'title': 'Item 2', 'subtitle': 'Subtitle for item 2'},
-    {'title': 'Item 3', 'subtitle': 'Subtitle for item 3'}
-  ];
-  TextEditingController titleController = TextEditingController();
-  TextEditingController subtitleController = TextEditingController();
+class MedicationWidget extends StatelessWidget {
+  final String name;
+  final String dosage;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
-  void addItem() {
-    setState(() {
-      items.add(
-          {'title': titleController.text, 'subtitle': subtitleController.text});
-      titleController.clear();
-      subtitleController.clear();
-    });
-  }
-
-  void editItem(int index) {
-    titleController.text = items[index]['title']!;
-    subtitleController.text = items[index]['subtitle']!;
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Edit Item'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(hintText: 'Title'),
-                ),
-                TextField(
-                  controller: subtitleController,
-                  decoration: InputDecoration(hintText: 'Subtitle'),
-                ),
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      items[index]['title'] = titleController.text;
-                      items[index]['subtitle'] = subtitleController.text;
-                      titleController.clear();
-                      subtitleController.clear();
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Text('Save')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel')),
-            ],
-          );
-        });
-  }
-
-  void deleteItem(int index) {
-    setState(() {
-      items.removeAt(index);
-    });
-  }
+  MedicationWidget({
+    required this.name,
+    required this.dosage,
+    required this.onDelete,
+    required this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('List Widget')),
-      body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text(items[index]['title']!),
-              subtitle: Text(items[index]['subtitle']!),
-              trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    editItem(index);
-                  }),
-              onTap: () {
-                deleteItem(index);
-              },
-            );
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Add Item'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(hintText: 'Title'),
-                      ),
-                      TextField(
-                        controller: subtitleController,
-                        decoration: InputDecoration(hintText: 'Subtitle'),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          addItem();
-                          Navigator.pop(context);
-                        },
-                        child: Text('Add')),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Cancel')),
-                  ],
-                );
-              });
-        },
-        child: Icon(Icons.add),
+    return ListTile(
+      leading: CircleAvatar(child: Text(name[0])),
+      title: Text(name),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(dosage),
+        ],
+      ),
+      trailing: PopupMenuButton(
+        itemBuilder: (BuildContext context) => [
+          PopupMenuItem(
+            child: Text('Edit'),
+            onTap: onEdit,
+          ),
+          PopupMenuItem(
+            child: Text('Delete'),
+            onTap: onDelete,
+          ),
+        ],
+        icon: Icon(Icons.more_vert),
       ),
     );
   }

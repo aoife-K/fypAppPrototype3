@@ -181,7 +181,9 @@ class _DiaryPageState extends State<DiaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Symptom Diary'),
+        title: Text('Symptom Diary',
+            style: TextStyle(color: Color.fromARGB(255, 28, 28, 28))),
+        backgroundColor: Color.fromARGB(255, 203, 202, 202),
       ),
       body: Column(
         children: [

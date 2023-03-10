@@ -91,12 +91,29 @@ class _NewReportsPageState extends State<NewReportsPage> {
               ],
             ),
             SizedBox(height: 10),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                ),
+                Text(
+                    "Daily Average: " +
+                        getAverageSymptomScore(
+                                'symptoms.json', 'steps', stepsRange, 0)
+                            .toString(),
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 16.0,
+                    )),
+              ],
+            ),
+            SizedBox(height: 10),
             SizedBox(
               height: 200, // provide a specific height
               width: 400,
               child: BarChartWidget(
                 chartData: getJsonData('symptoms.json', 'steps', stepsRange),
-                color: Color.fromARGB(255, 108, 219, 249),
+                color: Color.fromARGB(255, 90, 188, 208),
               ),
             ),
             SizedBox(height: 10),
@@ -109,7 +126,15 @@ class _NewReportsPageState extends State<NewReportsPage> {
                 max: 2,
                 divisions: 2,
                 onChanged: _onStepsSliderValueChanged,
-                label: '$_stepsSliderValue',
+                label: _stepsSliderValue == 0
+                    ? '1 Week'
+                    : _stepsSliderValue == 1
+                        ? '2 Weeks'
+                        : '1 Month',
+                activeColor: Color.fromARGB(
+                    255, 138, 199, 205), // Sets the active color of the slider
+                inactiveColor: Color.fromARGB(255, 222, 221,
+                    221), // Sets the inactive color of the slider
               ),
             ),
             Text(
@@ -137,6 +162,23 @@ class _NewReportsPageState extends State<NewReportsPage> {
               ],
             ),
             SizedBox(height: 10),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                ),
+                Text(
+                    "Daily Average: " +
+                        getAverageSymptomScore(
+                                'symptoms.json', 'temperature', tempRange, 1)
+                            .toString(),
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 16.0,
+                    )),
+              ],
+            ),
+            SizedBox(height: 10),
             SizedBox(
               height: 200, // provide a specific height
               width: 400,
@@ -156,11 +198,15 @@ class _NewReportsPageState extends State<NewReportsPage> {
                 max: 2,
                 divisions: 2,
                 onChanged: _onTempSliderValueChanged,
-                label: '$_tempSliderValue',
+                label: _tempSliderValue == 0
+                    ? '1 Week'
+                    : _tempSliderValue == 1
+                        ? '2 Weeks'
+                        : '1 Month',
                 activeColor: Color.fromARGB(
-                    255, 125, 191, 246), // Sets the active color of the slider
-                inactiveColor: Color.fromARGB(255, 193, 192,
-                    192), // Sets the inactive color of the slider
+                    255, 248, 177, 166), // Sets the active color of the slider
+                inactiveColor: Color.fromARGB(255, 222, 221,
+                    221), // Sets the inactive color of the slider
               ),
             ),
             Text(
@@ -188,12 +234,29 @@ class _NewReportsPageState extends State<NewReportsPage> {
               ],
             ),
             SizedBox(height: 10),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                ),
+                Text(
+                    "Daily Average: " +
+                        getAverageSymptomScore(
+                                'symptoms.json', 'cat_score', catRange, 0)
+                            .toString(),
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 16.0,
+                    )),
+              ],
+            ),
+            SizedBox(height: 10),
             SizedBox(
               height: 200, // provide a specific height
               width: 400,
               child: BarChartWidget(
                 chartData: getJsonData('symptoms.json', 'cat_score', catRange),
-                color: Color.fromARGB(255, 162, 249, 168),
+                color: Color.fromARGB(255, 145, 222, 150),
               ),
             ),
             SizedBox(height: 10),
@@ -206,15 +269,22 @@ class _NewReportsPageState extends State<NewReportsPage> {
                 max: 2,
                 divisions: 2,
                 onChanged: _onCatSliderValueChanged,
-                label: '$_catSliderValue',
+                label: _catSliderValue == 0
+                    ? '1 Week'
+                    : _catSliderValue == 1
+                        ? '2 Weeks'
+                        : '1 Month',
+                activeColor: Color.fromARGB(
+                    255, 157, 204, 144), // Sets the active color of the slider
+                inactiveColor: Color.fromARGB(255, 222, 221, 221),
               ),
             ),
             Text(
               _catSliderValue == 0
-                  ? '1 week'
+                  ? '1 Week'
                   : _catSliderValue == 1
-                      ? '2 weeks'
-                      : '1 month',
+                      ? '2 Weeks'
+                      : '1 Month',
               style: TextStyle(
                 color: Color.fromARGB(255, 91, 90, 90),
                 fontSize: 18.0,
@@ -230,6 +300,23 @@ class _NewReportsPageState extends State<NewReportsPage> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 91, 90, 90),
                       fontSize: 18.0,
+                    )),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0),
+                ),
+                Text(
+                    "Daily Average: " +
+                        getAverageSymptomScore(
+                                'symptoms.json', 'weight', weightRange, 1)
+                            .toString(),
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 16.0,
                     )),
               ],
             ),
@@ -252,7 +339,14 @@ class _NewReportsPageState extends State<NewReportsPage> {
                 max: 2,
                 divisions: 2,
                 onChanged: _onWeightSliderValueChanged,
-                label: '$_weightSliderValue',
+                label: _weightSliderValue == 0
+                    ? '1 Week'
+                    : _weightSliderValue == 1
+                        ? '2 Weeks'
+                        : '1 Month',
+                activeColor: Color.fromARGB(
+                    255, 248, 211, 166), // Sets the active color of the slider
+                inactiveColor: Color.fromARGB(255, 222, 221, 221),
               ),
             ),
             Text(
@@ -323,6 +417,49 @@ class _NewReportsPageState extends State<NewReportsPage> {
     //print(chartData.length);
 
     return filteredData;
+  }
+
+  double getAverageSymptomScore(
+      String dataSource, String symptom, int range, int decimalPlaces) {
+    String filePath =
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
+            dataSource;
+    final File jsonFile = File(filePath);
+    String jsonString = jsonFile.readAsStringSync();
+    final List<dynamic> jsonData = jsonDecode(jsonString);
+
+    DateTime startDate;
+    if (range == 0) {
+      startDate = DateTime.now().subtract(Duration(days: 7));
+    } else if (range == 1) {
+      startDate = DateTime.now().subtract(Duration(days: 14));
+    } else if (range == 2) {
+      startDate = DateTime.now().subtract(Duration(days: 30));
+    } else {
+      throw Exception("Invalid range value");
+    }
+
+    double totalScore = 0;
+    int count = 0;
+
+    jsonData.forEach((data) {
+      final DateTime date = DateTime.parse(data['date']);
+      final double catScore =
+          data[symptom] != null ? data[symptom].toDouble() : 0.0;
+
+      if (date.isAfter(startDate)) {
+        totalScore += catScore;
+        count++;
+      }
+    });
+
+    if (count == 0) {
+      return 0;
+    }
+
+    double averageScore = totalScore / count;
+
+    return double.parse(averageScore.toStringAsFixed(decimalPlaces));
   }
 
 //   List<MyData?> getJsonData(String dataSource, String symptom, int range) {
