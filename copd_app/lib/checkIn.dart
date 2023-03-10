@@ -12,6 +12,7 @@ class CheckInPage extends StatefulWidget {
 }
 
 class _CheckInPageState extends State<CheckInPage> {
+  List<String> answers = [];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,7 +29,7 @@ class _CheckInPageState extends State<CheckInPage> {
                     snapshot.data != null) {
                   final task = snapshot.data!;
                   return SurveyKit(
-                    onResult: (SurveyResult result) {
+                    onResult: (SurveyResult result) async {
                       print(result.finishReason);
                       final jsonResult = surveyResultsToJson(result);
                       // print the json-formatted results
@@ -36,8 +37,83 @@ class _CheckInPageState extends State<CheckInPage> {
                       //print(jsonResult.length);
                       Map<String, dynamic> resultMap = jsonToMap(jsonResult);
                       print(resultMap);
-                      writeJsonFile(resultMap);
-                      Navigator.pushNamed(context, '/');
+                      if (result.finishReason == FinishReason.COMPLETED) {
+                        writeJsonFile(resultMap);
+
+                        //writeJsonFile(resultMap);
+                        // Navigator.pushNamed(context, '/');
+                        await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Overview of Your Answers'),
+                            content: Container(
+                              width: double.maxFinite,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: resultMap.length,
+                                itemBuilder: (context, index) {
+                                  String question =
+                                      resultMap.keys.elementAt(index);
+                                  final answer =
+                                      resultMap.values.elementAt(index);
+                                  if (question == 'date') {
+                                    question = 'Date Completed:';
+                                  } else if (question == 'cough') {
+                                    question = 'Cough:';
+                                  } else if (question == 'phlegm') {
+                                    question = 'Phlegm:';
+                                  } else if (question == 'breathlessness') {
+                                    question = 'Breathlessness:';
+                                  } else if (question == 'tightness') {
+                                    question = 'Chest Tightness:';
+                                  } else if (question == 'activities') {
+                                    question = 'Activities:';
+                                  } else if (question == 'confidence') {
+                                    question = 'Confidence:';
+                                  } else if (question == 'sleep') {
+                                    question = 'Sleep:';
+                                  } else if (question == 'energy') {
+                                    question = 'Energy:';
+                                  }
+
+                                  return ListTile(
+                                    title: Text(question),
+                                    subtitle: Text('$answer'),
+                                  );
+                                },
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(result);
+                                  Navigator.pushNamed(context, '/');
+                                },
+                                child: Text('Close'),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text('Survey Was Cancelled'),
+                            content: Text('Answers were not saved.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(result);
+                                  Navigator.pushNamed(context, '/');
+                                },
+                                child: Text('Close'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                     task: task,
                     showProgress: true,
@@ -306,6 +382,7 @@ class _CheckInPageState extends State<CheckInPage> {
   }
 
   Future<Task> getSampleTask() {
+    Map<String, dynamic> surveyAnswers = {};
     var task = NavigableTask(
       id: TaskIdentifier(),
       steps: [
@@ -340,7 +417,7 @@ class _CheckInPageState extends State<CheckInPage> {
           ),
         ),
         QuestionStep(
-          title: 'Chest tightness',
+          title: 'Chest Tightness',
           text:
               '1 - My chest does not feel tight at all\n 5 - My chest feels very tight',
           answerFormat: ScaleAnswerFormat(
@@ -405,7 +482,7 @@ class _CheckInPageState extends State<CheckInPage> {
           ),
         ),
         QuestionStep(
-          title: 'Energy levels',
+          title: 'Energy Levels',
           text: '1 - I have lots of energy\n 5 - I have no energy at all',
           answerFormat: ScaleAnswerFormat(
             step: 1,
@@ -419,6 +496,14 @@ class _CheckInPageState extends State<CheckInPage> {
         CompletionStep(
           stepIdentifier: StepIdentifier(id: '321'),
           text: 'Thanks for completing your daily check-in!',
+          // 'Cough: ${resultMap['1']}\n'
+          // 'Phlegm: ${resultMap['2']}\n'
+          // 'Chest tightness: ${resultMap['3']}\n'
+          // 'Breathlessness: ${resultMap['4']}\n'
+          // 'Activities: ${resultMap['5']}\n'
+          // 'Confidence: ${resultMap['6']}\n'
+          // 'Sleep: ${resultMap['7']}\n'
+          // 'Energy levels: ${resultMap['8']}\n',
           title: 'Done!',
           buttonText: 'Submit',
         ),
