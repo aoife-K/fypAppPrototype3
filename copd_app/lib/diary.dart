@@ -219,6 +219,14 @@ class _DiaryPageState extends State<DiaryPage> {
             child: ValueListenableBuilder<Map<String, double>>(
               valueListenable: _selectedEvents,
               builder: (context, value, _) {
+                if (_focusedDay.isAfter(DateTime.now())) {
+                  return Center(
+                    child: Text(
+                      'No data available! Future data cannot be added.',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  );
+                }
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
