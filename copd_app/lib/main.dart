@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:copd_app/custom_expansion_tile.dart';
 
 import 'contacts.dart';
@@ -79,7 +80,18 @@ class _LoginState extends State<Login> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: const EdgeInsets.only(top: 130.0),
+              child: Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 9,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/home.png'))),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
               child: Center(
                 child: Container(
                   width: 200,
@@ -88,7 +100,7 @@ class _LoginState extends State<Login> {
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(50.0)),*/
                   child: Text('COPD Symptom Tracker',
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 35),
                       textAlign: TextAlign.center),
                   //color: Colors.blue,
                 ),
@@ -116,20 +128,22 @@ class _LoginState extends State<Login> {
                     hintText: 'Enter secure password'),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-              },
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     //TODO FORGOT PASSWORD SCREEN GOES HERE
+            //   },
+            //   child: Text(
+            //     'Forgot Password?',
+            //     style: TextStyle(color: Colors.blue, fontSize: 15),
+            //   ),
+            // ),
+            SizedBox(height: 40),
             Container(
               height: 50,
               width: 250,
               decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+                  color: Color.fromARGB(255, 29, 181, 215),
+                  borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -142,25 +156,27 @@ class _LoginState extends State<Login> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 200,
             ),
-            Container(
-              height: 50,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 123, 216, 134),
-                  borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => SignupPage()));
-                },
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Don't have an account?"),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignupPage()));
+                  },
+                  child: Text(
+                    "Sign Up",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 26, 187, 195)),
+                  ),
                 ),
-              ),
-            ),
+              ],
+            )
           ],
         ),
       ),

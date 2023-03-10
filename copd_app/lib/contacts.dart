@@ -56,13 +56,17 @@ class _ContactPageState extends State<ContactPage> {
                     child: GestureDetector(
                       onTap: () => _showOptionsDialog(context, index),
                       child: ListTile(
-                        leading: Icon(Icons.person),
-                        title: Text(contact.name),
+                        leading:
+                            Icon(Icons.person, size: 40.0, color: Colors.blue),
+                        title: Text(contact.name,
+                            style: TextStyle(fontSize: 18.0)),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(contact.phone),
-                            Text(contact.email),
+                            Text(contact.phone,
+                                style: TextStyle(fontSize: 15.0)),
+                            Text(contact.email,
+                                style: TextStyle(fontSize: 15.0)),
                           ],
                         ),
                         trailing: PopupMenuButton(

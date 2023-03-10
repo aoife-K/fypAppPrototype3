@@ -62,10 +62,16 @@ class SignupPage extends StatelessWidget {
                       child: Column(
                         children: [
                           makeInput(label: "Email"),
+                          makeInput(label: "First Name"),
+                          makeInput(label: "Last Name"),
+                          makeInput(label: "Phone Number"),
                           makeInput(label: "Password", obsureText: true),
                           makeInput(label: "Confirm Pasword", obsureText: true)
                         ],
                       ),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40),
@@ -82,7 +88,7 @@ class SignupPage extends StatelessWidget {
                           minWidth: double.infinity,
                           height: 60,
                           onPressed: () {},
-                          color: Color.fromARGB(255, 114, 218, 119),
+                          color: Color.fromARGB(255, 85, 197, 200),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40)),
                           child: Text(

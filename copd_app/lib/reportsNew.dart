@@ -87,6 +87,7 @@ class _NewReportsPageState extends State<NewReportsPage> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 91, 90, 90),
                       fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     )),
               ],
             ),
@@ -158,6 +159,7 @@ class _NewReportsPageState extends State<NewReportsPage> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 91, 90, 90),
                       fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     )),
               ],
             ),
@@ -230,6 +232,7 @@ class _NewReportsPageState extends State<NewReportsPage> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 91, 90, 90),
                       fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     )),
               ],
             ),
@@ -300,6 +303,7 @@ class _NewReportsPageState extends State<NewReportsPage> {
                     style: TextStyle(
                       color: Color.fromARGB(255, 91, 90, 90),
                       fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     )),
               ],
             ),

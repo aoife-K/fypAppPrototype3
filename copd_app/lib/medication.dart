@@ -57,12 +57,15 @@ class _MedicationsPageState extends State<MedicationsPage> {
                     child: GestureDetector(
                       onTap: () => _showOptionsDialog(context, index),
                       child: ListTile(
-                        leading: Icon(Icons.medication),
-                        title: Text(contact.name),
+                        leading: Icon(Icons.medication,
+                            color: Colors.green, size: 25.0),
+                        title: Text(contact.name,
+                            style: TextStyle(fontSize: 18.0)),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(contact.dosage),
+                            Text(contact.dosage,
+                                style: TextStyle(fontSize: 15.0)),
                           ],
                         ),
                         trailing: PopupMenuButton(
