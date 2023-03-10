@@ -34,7 +34,7 @@ class _ContactPageState extends State<ContactPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 120),
+            SizedBox(height: 150),
             Text("Contacts",
                 style: TextStyle(
                   color: Color.fromARGB(255, 91, 90, 90),

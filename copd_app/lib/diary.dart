@@ -232,24 +232,7 @@ class _DiaryPageState extends State<DiaryPage> {
                         border: Border.all(),
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      // children: ExpansionTile(
-                      //   title: const Text('Jane Doe'),
-                      //   subtitle: const Text('Physician'),
-                      //   leading: Icon(Icons.person),
-                      //   trailing: Icon(
-                      //     _customTileExpanded ? Icons.more_vert : Icons.more_vert,
-                      //   ),
-                      //   children: const <Widget>[
-                      //     ListTile(
-                      //         title:
-                      //             Text('Phone: 123-456-7890 \nEmail: janedoe@gmail.com')),
-                      //   ],
-                      //   onExpansionChanged: (bool expanded) {
-                      //     setState(() => _customTileExpanded = expanded);
-                      //   },
-                      // ),
                       child: EditableListTile(
-                        //key: ValueKey(value.keys.elementAt(index)),
                         title: ('${value.keys.elementAt(index)}'),
                         subtitle:
                             double.parse('${value.values.elementAt(index)}'),
@@ -408,10 +391,30 @@ class _EditableListTileState extends State<EditableListTile> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
+                  String title;
+                  String content =
+                      'Information about this symptom will appear here, along with acceptable ranges for this symptom.';
+
+                  if (widget.title == 'cat_score') {
+                    title = 'CAT Score';
+                    //content = 'Content relating to CAT Score.';
+                  } else if (widget.title == 'weight') {
+                    title = 'Weight';
+                  } else if (widget.title == 'steps') {
+                    title = 'Steps';
+                  } else if (widget.title == 'spo2') {
+                    title = 'SpO2';
+                  } else if (widget.title == 'temperature') {
+                    title = 'Temperature';
+                  } else if (widget.title == 'fev1') {
+                    title = 'FEV1';
+                  } else {
+                    title = 'Symptom';
+                  }
+
                   return AlertDialog(
-                    title: Text('Symptom Info'),
-                    content: Text(
-                        'Information about this symptom will appear here, along with acceptable ranges for this symptom.'),
+                    title: Text(title),
+                    content: Text(content),
                     actions: [
                       IconButton(
                         onPressed: () {

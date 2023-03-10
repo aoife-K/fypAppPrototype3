@@ -104,29 +104,32 @@ class WhatIsCOPDPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              BackButton(),
-              Padding(padding: EdgeInsets.only(left: 80)),
-              Text("What is COPD?",
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 91, 90, 90),
-                    fontSize: 25.0,
-                  )),
-            ],
-          ),
-          SizedBox(height: 60),
-          Text(
-              "This page will contain information about COPD, including symptoms, causes, and treatments.",
-              style: TextStyle(
-                color: Color.fromARGB(255, 91, 90, 90),
-                fontSize: 15.0,
-              )),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //SizedBox(height: 150),
+            Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                BackButton(),
+                Padding(padding: EdgeInsets.only(left: 80)),
+                Text("What is COPD?",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 91, 90, 90),
+                      fontSize: 25.0,
+                    )),
+              ],
+            ),
+            SizedBox(height: 60),
+            Text(
+                "This page will contain information about COPD, including symptoms, causes, and treatments.",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 91, 90, 90),
+                  fontSize: 15.0,
+                )),
+          ],
+        ),
       ),
     );
   }
