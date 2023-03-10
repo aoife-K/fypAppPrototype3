@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'auth_service.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
+  String _email = '';
+  String _password = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,51 +68,113 @@ class SignupPage extends StatelessWidget {
                         )
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                        children: [
-                          makeInput(label: "Email"),
-                          makeInput(label: "First Name"),
-                          makeInput(label: "Last Name"),
-                          makeInput(label: "Phone Number"),
-                          makeInput(label: "Password", obsureText: true),
-                          makeInput(label: "Confirm Pasword", obsureText: true)
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Container(
-                        padding: EdgeInsets.only(top: 3, left: 3),
-                        // decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(40),
-                        //     border: Border(
-                        //         bottom: BorderSide(color: Colors.black),
-                        //         top: BorderSide(color: Colors.black),
-                        //         right: BorderSide(color: Colors.black),
-                        //         left: BorderSide(color: Colors.black))),
-                        child: MaterialButton(
-                          minWidth: double.infinity,
-                          height: 60,
-                          onPressed: () {},
-                          color: Color.fromARGB(255, 85, 197, 200),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: Colors.white,
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 50.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            TextFormField(
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your email';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _email = value.trim();
+                                });
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                hintText: 'Enter your email',
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            TextFormField(
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _password = value.trim();
+                                });
+                              },
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                hintText: 'Enter your password',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            MaterialButton(
+                              minWidth: double.infinity,
+                              height: 60,
+                              onPressed: () async {
+                                // if (_formKey.currentState!.validate()) {
+                                //   dynamic result =
+                                //       await _auth.signUpWithEmailAndPassword(
+                                //           _email, _password);
+                                //   if (result == null) {
+                                //     print('Registration failed');
+                                //   } else
+                                {
+                                  print('Registration successful');
+                                }
+                                // }
+                              },
+                              color: Color.fromARGB(255, 85, 197, 200),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40)),
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
+
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 40),
+                    //   child: Container(
+                    //     padding: EdgeInsets.only(top: 3, left: 3),
+                    //     child: MaterialButton(
+                    //       minWidth: double.infinity,
+                    //       height: 60,
+                    //       onPressed: () {},
+                    //       color: Color.fromARGB(255, 85, 197, 200),
+                    //       shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(40)),
+                    //       child: Text(
+                    //         "Sign Up",
+                    //         style: TextStyle(
+                    //           fontWeight: FontWeight.w600,
+                    //           fontSize: 16,
+                    //           color: Colors.white,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -142,34 +215,89 @@ class SignupPage extends StatelessWidget {
   }
 }
 
-Widget makeInput({label, obsureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-      ),
-      SizedBox(
-        height: 5,
-      ),
-      TextField(
-        obscureText: obsureText,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.grey,
-            ),
-          ),
-          border:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-        ),
-      ),
-      SizedBox(
-        height: 30,
-      )
-    ],
-  );
-}
+// class RegisterPage extends StatefulWidget {
+//   @override
+//   _RegisterPageState createState() => _RegisterPageState();
+// }
+
+// class _RegisterPageState extends State<RegisterPage> {
+//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+//   final AuthService _auth = AuthService();
+//   String _email = '';
+//   String _password = '';
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Register'),
+//       ),
+//       body: Container(
+//         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+//         child: Form(
+//           key: _formKey,
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               TextFormField(
+//                 validator: (String? value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your email';
+//                   }
+//                   return null;
+//                 },
+//                 onChanged: (value) {
+//                   setState(() {
+//                     _email = value.trim();
+//                   });
+//                 },
+//                 decoration: InputDecoration(
+//                   labelText: 'Email',
+//                   hintText: 'Enter your email',
+//                 ),
+//               ),
+//               SizedBox(
+//                 height: 20.0,
+//               ),
+//               TextFormField(
+//                 validator: (String? value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your password';
+//                   }
+//                   return null;
+//                 },
+//                 onChanged: (value) {
+//                   setState(() {
+//                     _password = value.trim();
+//                   });
+//                 },
+//                 obscureText: true,
+//                 decoration: InputDecoration(
+//                   labelText: 'Password',
+//                   hintText: 'Enter your password',
+//                 ),
+//               ),
+//               SizedBox(
+//                 height: 20.0,
+//               ),
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   if (_formKey.currentState!.validate()) {
+//                     dynamic result = await _auth.signUpWithEmailAndPassword(
+//                         _email, _password);
+//                     if (result == null) {
+//                       print('Registration failed');
+//                     } else {
+//                       print('Registration successful');
+//                     }
+//                   }
+//                 },
+//                 child: Text('Register'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -20,17 +20,25 @@ import 'checkIn.dart';
 import 'reportsNew.dart';
 //import 'login.dart';
 import 'signup.dart';
+import 'auth_service.dart';
 
-void main() async {
+Future main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeModeNotifier(),
       child: MyApp(),
     ),
   );
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  //WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   FirebaseFirestore db = FirebaseFirestore.instance;
 }
 
@@ -69,6 +77,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //final AuthService _auth = AuthService();
+  String _email = '';
+  String _password = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,25 +122,81 @@ class _LoginState extends State<Login> {
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _email = value.trim();
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter your email',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      TextFormField(
+                        validator: (String? value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _password = value.trim();
+                          });
+                        },
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter your password',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      // TextButton(
+                      //   onPressed: () async {
+                      //     if (_formKey.currentState!.validate()) {
+                      //       dynamic result = await _auth
+                      //           .signInWithEmailAndPassword(_email, _password);
+                      //       if (result == null) {
+                      //         print('Invalid login credentials');
+                      //       } else {
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (_) => MyHomePage()));
+                      //         print('Login successful');
+                      //       }
+                      //     }
+                      //   },
+                      //   child: Text(
+                      //     'Login',
+                      //     style: TextStyle(color: Colors.white, fontSize: 18),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                    hintText: 'Enter secure password'),
-              ),
-            ),
+
             // TextButton(
             //   onPressed: () {
             //     //TODO FORGOT PASSWORD SCREEN GOES HERE
@@ -137,7 +206,7 @@ class _LoginState extends State<Login> {
             //     style: TextStyle(color: Colors.blue, fontSize: 15),
             //   ),
             // ),
-            SizedBox(height: 40),
+            SizedBox(height: 30),
             Container(
               height: 50,
               width: 250,
@@ -145,9 +214,19 @@ class _LoginState extends State<Login> {
                   color: Color.fromARGB(255, 29, 181, 215),
                   borderRadius: BorderRadius.circular(20)),
               child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => MyHomePage()));
+                onPressed: () async {
+                  //if (_formKey.currentState!.validate()) {
+                  // dynamic result = await _auth.signInWithEmailAndPassword(
+                  //     _email, _password);
+                  // if (result == null) {
+                  //   print('Invalid login credentials');
+                  // } else
+                  {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => MyHomePage()));
+                    print('Login successful');
+                  }
+                  //}
                 },
                 child: Text(
                   'Login',
@@ -156,7 +235,7 @@ class _LoginState extends State<Login> {
               ),
             ),
             SizedBox(
-              height: 200,
+              height: 100,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -183,6 +262,93 @@ class _LoginState extends State<Login> {
     );
   }
 }
+
+// class Login extends StatefulWidget {
+//   @override
+//   _LoginState createState() => _LoginState();
+// }
+
+// class _LoginState extends State<Login> {
+//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+//   final AuthService _auth = AuthService();
+//   String _email = '';
+//   String _password = '';
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Login'),
+//       ),
+//       body: Container(
+//         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
+//         child: Form(
+//           key: _formKey,
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               TextFormField(
+//                 validator: (String? value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your email';
+//                   }
+//                   return null;
+//                 },
+//                 onChanged: (value) {
+//                   setState(() {
+//                     _email = value.trim();
+//                   });
+//                 },
+//                 decoration: InputDecoration(
+//                   labelText: 'Email',
+//                   hintText: 'Enter your email',
+//                 ),
+//               ),
+//               SizedBox(
+//                 height: 20.0,
+//               ),
+//               TextFormField(
+//                 validator: (String? value) {
+//                   if (value!.isEmpty) {
+//                     return 'Please enter your password';
+//                   }
+//                   return null;
+//                 },
+//                 onChanged: (value) {
+//                   setState(() {
+//                     _password = value.trim();
+//                   });
+//                 },
+//                 obscureText: true,
+//                 decoration: InputDecoration(
+//                   labelText: 'Password',
+//                   hintText: 'Enter your password',
+//                 ),
+//               ),
+//               SizedBox(
+//                 height: 20.0,
+//               ),
+//               ElevatedButton(
+//                 onPressed: () async {
+//                   if (_formKey.currentState!.validate()) {
+//                     dynamic result = await _auth.signInWithEmailAndPassword(
+//                         _email, _password);
+//                     if (result == null) {
+//                       print('Invalid login credentials');
+//                     } else {
+//                       print('Login successful');
+//                     }
+//                   }
+//                 },
+//                 child: Text('Login'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -602,7 +768,6 @@ class ThemeModeNotifier with ChangeNotifier {
   }
 }
 
-
 // class GraphsPage extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
@@ -627,11 +792,6 @@ class ThemeModeNotifier with ChangeNotifier {
 //     );
 //   }
 // }
-
-
-
-
-
 
 // class BigCard extends StatelessWidget {
 //   const BigCard({

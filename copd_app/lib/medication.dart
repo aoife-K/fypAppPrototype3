@@ -19,6 +19,8 @@ class _MedicationsPageState extends State<MedicationsPage> {
   List<Widget> _listOfWidgets = [];
   final List<Medication> _medications = [
     Medication(name: 'Symbicort Inhaler', dosage: '2 puffs daily'),
+    Medication(name: 'Albuterol', dosage: '250mg'),
+    Medication(name: 'Theophylline', dosage: '400mg'),
   ];
 
   @override

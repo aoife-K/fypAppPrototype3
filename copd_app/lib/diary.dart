@@ -180,13 +180,12 @@ class _DiaryPageState extends State<DiaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Symptom Diary',
-            style: TextStyle(color: Color.fromARGB(255, 28, 28, 28))),
-        backgroundColor: Color.fromARGB(255, 203, 202, 202),
-      ),
       body: Column(
         children: [
+          SizedBox(height: 70),
+          Text('Symptom Diary',
+              style: TextStyle(
+                  color: Color.fromARGB(255, 28, 28, 28), fontSize: 20)),
           TableCalendar<String>(
             firstDay: DateTime.utc(2010, 10, 16),
             lastDay: DateTime.utc(2030, 3, 14),
@@ -260,74 +259,6 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 }
 
-// class EditableListTile extends StatefulWidget {
-//   final String title;
-//   final double subtitle;
-//   final ValueChanged<double> onSubtitleChanged;
-
-//   const EditableListTile({
-//     required this.title,
-//     required this.subtitle,
-//     required this.onSubtitleChanged,
-//   });
-
-//   @override
-//   _EditableListTileState createState() => _EditableListTileState();
-// }
-
-// class _EditableListTileState extends State<EditableListTile> {
-//   bool isEditing = false;
-//   late TextEditingController _textEditingController;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _textEditingController =
-//         TextEditingController(text: widget.subtitle.toString());
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListTile(
-//       title: Text(widget.title,
-//           style: TextStyle(
-//             color: Colors.black,
-//           )),
-//       subtitle: isEditing
-//           ? TextField(
-//               controller: _textEditingController,
-//               decoration: InputDecoration(
-//                 hintText: widget.subtitle.toString(),
-//               ),
-//               onChanged: (value) {
-//                 widget.onSubtitleChanged(
-//                     double.tryParse(value) ?? widget.subtitle);
-//               },
-//               style: TextStyle(
-//                 color: Color.fromARGB(255, 140, 142, 140),
-//               ))
-//           : Text(widget.subtitle.toString(),
-//               style: TextStyle(
-//                 color: Color.fromARGB(255, 49, 50, 49),
-//                 fontSize: 18,
-//               )),
-//       trailing: IconButton(
-//         icon: Icon(isEditing ? Icons.check : Icons.edit),
-//         onPressed: () {
-//           setState(() {
-//             isEditing = !isEditing;
-//           });
-//           if (!isEditing) {
-//             widget.onSubtitleChanged(
-//                 double.tryParse(_textEditingController.text) ??
-//                     widget.subtitle);
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
-
 //******************** */
 class EditableListTile extends StatefulWidget {
   final String title;
@@ -359,8 +290,25 @@ class _EditableListTileState extends State<EditableListTile> {
 
   @override
   Widget build(BuildContext context) {
+    String title;
+
+    if (widget.title == 'cat_score') {
+      title = 'CAT Score';
+    } else if (widget.title == 'weight') {
+      title = 'Weight (kg)';
+    } else if (widget.title == 'steps') {
+      title = 'Steps';
+    } else if (widget.title == 'spo2') {
+      title = 'SpO2 (%)';
+    } else if (widget.title == 'temperature') {
+      title = 'Temperature (°C)';
+    } else if (widget.title == 'fev1') {
+      title = 'FEV1 (%)';
+    } else {
+      title = widget.title;
+    }
     return ListTile(
-      title: Text(widget.title,
+      title: Text(title,
           style: TextStyle(
             color: Colors.black,
           )),
@@ -393,11 +341,22 @@ class _EditableListTileState extends State<EditableListTile> {
                 builder: (BuildContext context) {
                   String title;
                   String content =
-                      'Information about this symptom will appear here, along with acceptable ranges for this symptom.';
+                      'Information about this symptom will appear here, along with acceptable ranges for this symptom.' +
+                          '\n';
+                  Map<String, double> myMap = _getCatData(widget.date);
 
                   if (widget.title == 'cat_score') {
                     title = 'CAT Score';
-                    //content = 'Content relating to CAT Score.';
+                    content += '\n' + 'Detailed CAT score information: ' + '\n';
+                    for (String key in myMap.keys) {
+                      final value = myMap[key];
+                      if (value != null) {
+                        content +=
+                            ('${key}: ${value.toStringAsFixed(2)}' + '\n');
+                      } else {
+                        content += ('${key}: null' + '\n');
+                      }
+                    }
                   } else if (widget.title == 'weight') {
                     title = 'Weight';
                   } else if (widget.title == 'steps') {
@@ -409,7 +368,7 @@ class _EditableListTileState extends State<EditableListTile> {
                   } else if (widget.title == 'fev1') {
                     title = 'FEV1';
                   } else {
-                    title = 'Symptom';
+                    title = widget.title;
                   }
 
                   return AlertDialog(
@@ -445,20 +404,6 @@ class _EditableListTileState extends State<EditableListTile> {
           ),
         ],
       ),
-      // IconButton(
-      //   icon: Icon(isEditing ? Icons.check : Icons.edit),
-      //   onPressed: () {
-      //     setState(() {
-      //       isEditing = !isEditing;
-      //     });
-      //     if (!isEditing) {
-      //       final newSubtitle =
-      //           double.tryParse(_textEditingController.text) ?? widget.subtitle;
-      //       widget.onSubtitleChanged(newSubtitle);
-      //       _updateJsonFile(widget.title, newSubtitle, widget.date);
-      //     }
-      //   },
-      // ),
     );
   }
 
@@ -546,164 +491,48 @@ class _EditableListTileState extends State<EditableListTile> {
   //     await file.writeAsString(jsonEncode(data));
   //   }
   // }
+
+  Map<String, double> _getCatData(DateTime date) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String dateEntered = formatter.format(date);
+    File jsonFile = File(
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/cat.json');
+    jsonFile.existsSync();
+    String jsonString = jsonFile.readAsStringSync();
+    Map<String, double> emptyData = {
+      "cough": 0,
+      "phlegm": 0,
+      "tightness": 0,
+      "breathlessness": 0,
+      "activities": 0,
+      "confidence": 0,
+      "sleep": 0,
+      "energy": 0,
+      "total": 0
+    };
+
+    // Parse JSON data into a List of maps
+    List<dynamic> jsonData = jsonDecode(jsonString);
+    print(jsonData.length);
+
+    // Filter maps to find the one with matching date
+    Map<String, dynamic> matchingMap = jsonData.firstWhere(
+      (map) => DateTime.parse(map['date']).isAtSameMomentAs(date),
+      orElse: () => emptyData,
+    );
+
+    // If matching map was found, return values
+    if (matchingMap != null) {
+      Map<String, double> values = {};
+      for (var entry in matchingMap.entries) {
+        if (entry.key != 'date') {
+          values[entry.key] = entry.value.toDouble();
+        }
+      }
+      return values;
+    }
+
+    // If no matching map was found, return empty list
+    return emptyData;
+  }
 }
-
-// class EditableListTile extends StatefulWidget {
-//   final String title;
-//   final double subtitle;
-//   final DateTime date;
-
-//   const EditableListTile({required this.title, required this.subtitle, required this.date});
-
-//   @override
-//   _EditableListTileState createState() => _EditableListTileState();
-// }
-
-// class _EditableListTileState extends State<EditableListTile> {
-//   bool isEditing = false;
-//   late double _subtitleValue;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _subtitleValue = widget.subtitle;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListTile(
-//       title: Text(widget.title),
-//       subtitle: isEditing
-//           ? TextField(
-//               decoration: InputDecoration(
-//                 hintText: widget.subtitle.toString(),
-//               ),
-//               onChanged: (value) {
-//                 setState(() {
-//                   _subtitleValue = double.parse(value);
-//                 });
-//               },
-//             )
-//           : Text(widget.subtitle.toString()),
-//       trailing: IconButton(
-//         icon: Icon(Icons.edit),
-//         onPressed: () {
-//           setState(() {
-//             isEditing = !isEditing;
-//           });
-//           if (!isEditing) {
-//             // final newSubtitle =
-//             //     double.tryParse(_textEditingController.text) ?? widget.subtitle;
-//             //widget.onSubtitleChanged(newSubtitle);
-//             _updateJsonFile(widget.title, newSubtitle, widget.date);
-//           }
-//         },
-//       ),
-//     );
-//   }
-
-//   Future<void> _updateJsonFile(
-//       String title, double newSubtitle, DateTime date) async {
-//     final DateFormat formatter = DateFormat('yyyy-MM-dd');
-//     final String dateEntered = formatter.format(date);
-//     final file = File(
-//         '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
-//     if (await file.exists()) {
-//       final jsonContent = await file.readAsString();
-//       final List<dynamic> data = jsonDecode(jsonContent);
-//       for (var i = 0; i < data.length; i++) {
-//         final item = data[i];
-//         final itemDate = DateTime.parse(item['date']);
-//         if (itemDate.isAtSameMomentAs(date)) {
-//           data[i][title] = newSubtitle;
-//           data[i]['date'] = DateFormat('yyyy-MM-dd').format(date);
-//           await file.writeAsString(jsonEncode(data));
-//           return;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// class EditableListTile extends StatefulWidget {
-//   final String title;
-//   final double subtitle;
-//   final ValueChanged<double> onChanged;
-
-//   const EditableListTile({
-//     required Key key,
-//     required this.title,
-//     required this.subtitle,
-//     required this.onChanged,
-//   }) : super(key: key);
-
-//   @override
-//   _EditableListTileState createState() => _EditableListTileState();
-
-// }
-
-// class _EditableListTileState extends State<EditableListTile> {
-//   bool _expanded = false;
-//   late TextEditingController _textEditingController;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _textEditingController =
-//         TextEditingController(text: widget.subtitle.toString());
-//   }
-
-//   @override
-//   void dispose() {
-//     _textEditingController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ExpansionTile(
-//       title: Text(widget.title),
-//       subtitle: Text(widget.subtitle.toStringAsFixed(2)),
-//       trailing: IconButton(
-//         icon: Icon(Icons.edit),
-//         onPressed: () {
-//           setState(() {
-//             _expanded = true;
-//           });
-//         },
-//       ),
-//       children: _expanded
-//           ? [
-//               Padding(
-//                 padding: const EdgeInsets.all(16.0),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text('Additional Details'),
-//                     TextField(
-//                       controller: _textEditingController,
-//                       keyboardType:
-//                           TextInputType.numberWithOptions(decimal: true),
-//                       onChanged: (value) {
-//                         widget.onChanged?.call(double.tryParse(value) ?? 0.0);
-//                       },
-//                     ),
-//                     ElevatedButton(
-//                       onPressed: () {
-//                         setState(() {
-//                           _expanded = false;
-//                           widget.onChanged?.call(
-//                               double.tryParse(_textEditingController.text) ??
-//                                   0.0);
-//                         });
-//                       },
-//                       child: Text('Save'),
-//                     ),
-//                   ],
-//                 ),
-//               )
-//             ]
-//           : [],
-//     );
-//   }
-// }
