@@ -397,20 +397,63 @@ class _EditableListTileState extends State<EditableListTile> {
                 color: Color.fromARGB(255, 49, 50, 49),
                 fontSize: 18,
               )),
-      trailing: IconButton(
-        icon: Icon(isEditing ? Icons.check : Icons.edit),
-        onPressed: () {
-          setState(() {
-            isEditing = !isEditing;
-          });
-          if (!isEditing) {
-            final newSubtitle =
-                double.tryParse(_textEditingController.text) ?? widget.subtitle;
-            widget.onSubtitleChanged(newSubtitle);
-            _updateJsonFile(widget.title, newSubtitle, widget.date);
-          }
-        },
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: Icon(Icons.info),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Symptom Info'),
+                    content: Text(
+                        'Information about this symptom will appear here, along with acceptable ranges for this symptom.'),
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(isEditing ? Icons.check : Icons.edit),
+            onPressed: () {
+              setState(() {
+                isEditing = !isEditing;
+              });
+              if (!isEditing) {
+                final newSubtitle =
+                    double.tryParse(_textEditingController.text) ??
+                        widget.subtitle;
+                widget.onSubtitleChanged(newSubtitle);
+                _updateJsonFile(widget.title, newSubtitle, widget.date);
+              }
+            },
+          ),
+        ],
       ),
+      // IconButton(
+      //   icon: Icon(isEditing ? Icons.check : Icons.edit),
+      //   onPressed: () {
+      //     setState(() {
+      //       isEditing = !isEditing;
+      //     });
+      //     if (!isEditing) {
+      //       final newSubtitle =
+      //           double.tryParse(_textEditingController.text) ?? widget.subtitle;
+      //       widget.onSubtitleChanged(newSubtitle);
+      //       _updateJsonFile(widget.title, newSubtitle, widget.date);
+      //     }
+      //   },
+      // ),
     );
   }
 
@@ -499,8 +542,6 @@ class _EditableListTileState extends State<EditableListTile> {
   //   }
   // }
 }
-
-
 
 // class EditableListTile extends StatefulWidget {
 //   final String title;
