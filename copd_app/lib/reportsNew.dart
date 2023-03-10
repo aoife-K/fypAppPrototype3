@@ -16,6 +16,47 @@ class NewReportsPage extends StatefulWidget {
 }
 
 class _NewReportsPageState extends State<NewReportsPage> {
+  double _stepsSliderValue = 0;
+  double _tempSliderValue = 0;
+  double _catSliderValue = 0;
+  double _weightSliderValue = 0;
+  int stepsRange = 0;
+  int tempRange = 0;
+  int catRange = 0;
+  int weightRange = 0;
+
+  void _onStepsSliderValueChanged(double value) {
+    setState(() {
+      _stepsSliderValue = value;
+      stepsRange = value.toInt();
+      //print(stepsRange);
+    });
+  }
+
+  void _onTempSliderValueChanged(double value) {
+    setState(() {
+      _tempSliderValue = value;
+      tempRange = value.toInt();
+      //print(tempRange);
+    });
+  }
+
+  void _onCatSliderValueChanged(double value) {
+    setState(() {
+      _catSliderValue = value;
+      catRange = value.toInt();
+      //print(catRange);
+    });
+  }
+
+  void _onWeightSliderValueChanged(double value) {
+    setState(() {
+      _weightSliderValue = value;
+      weightRange = value.toInt();
+      //print(weightRange);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -36,21 +77,7 @@ class _NewReportsPageState extends State<NewReportsPage> {
                     )),
               ],
             ),
-            SizedBox(height: 10),
-            // Text(
-            //     "This page will contain reports and trends from your symptom tracking data.\nHere are some samples of what the reports page will look like when detailed data is added in the future.",
-            //     style: TextStyle(
-            //       color: Color.fromARGB(255, 91, 90, 90),
-            //       fontSize: 15.0,
-            //     ),
-            //     textAlign: TextAlign.center),
-            SizedBox(height: 50),
-            // SizedBox(
-            //   height: 300, // provide a specific height
-            //   width: 400,
-            //   child:
-            //       MyLineChart(getJsonData('reportsData.json', 'temperature')),
-            // ),
+            SizedBox(height: 30),
             Row(
               children: [
                 Padding(
@@ -68,7 +95,33 @@ class _NewReportsPageState extends State<NewReportsPage> {
               height: 200, // provide a specific height
               width: 400,
               child: BarChartWidget(
-                  chartData: getJsonData('reportsData.json', 'steps')),
+                chartData: getJsonData('symptoms.json', 'steps', stepsRange),
+                color: Color.fromARGB(255, 108, 219, 249),
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              height: 10, // provide a specific height
+              width: 200,
+              child: Slider(
+                value: _stepsSliderValue.toDouble(),
+                min: 0,
+                max: 2,
+                divisions: 2,
+                onChanged: _onStepsSliderValueChanged,
+                label: '$_stepsSliderValue',
+              ),
+            ),
+            Text(
+              _stepsSliderValue == 0
+                  ? '1 week'
+                  : _stepsSliderValue == 1
+                      ? '2 weeks'
+                      : '1 month',
+              style: TextStyle(
+                color: Color.fromARGB(255, 91, 90, 90),
+                fontSize: 18.0,
+              ),
             ),
             SizedBox(height: 50),
             Row(
@@ -88,7 +141,38 @@ class _NewReportsPageState extends State<NewReportsPage> {
               height: 200, // provide a specific height
               width: 400,
               child: BarChartWidget(
-                  chartData: getJsonData('reportsData.json', 'temperature')),
+                chartData:
+                    getJsonData('symptoms.json', 'temperature', tempRange),
+                color: Color.fromARGB(255, 245, 150, 143),
+              ),
+            ),
+            //SizedBox(10),
+            SizedBox(
+              height: 10, // provide a specific height
+              width: 200,
+              child: Slider(
+                value: _tempSliderValue.toDouble(),
+                min: 0,
+                max: 2,
+                divisions: 2,
+                onChanged: _onTempSliderValueChanged,
+                label: '$_tempSliderValue',
+                activeColor: Color.fromARGB(
+                    255, 125, 191, 246), // Sets the active color of the slider
+                inactiveColor: Color.fromARGB(255, 193, 192,
+                    192), // Sets the inactive color of the slider
+              ),
+            ),
+            Text(
+              _tempSliderValue == 0
+                  ? '1 week'
+                  : _tempSliderValue == 1
+                      ? '2 weeks'
+                      : '1 month',
+              style: TextStyle(
+                color: Color.fromARGB(255, 91, 90, 90),
+                fontSize: 18.0,
+              ),
             ),
             SizedBox(height: 50),
             Row(
@@ -108,7 +192,33 @@ class _NewReportsPageState extends State<NewReportsPage> {
               height: 200, // provide a specific height
               width: 400,
               child: BarChartWidget(
-                  chartData: getJsonData('reportsData.json', 'cat_score')),
+                chartData: getJsonData('symptoms.json', 'cat_score', catRange),
+                color: Color.fromARGB(255, 162, 249, 168),
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              height: 10, // provide a specific height
+              width: 200,
+              child: Slider(
+                value: _catSliderValue.toDouble(),
+                min: 0,
+                max: 2,
+                divisions: 2,
+                onChanged: _onCatSliderValueChanged,
+                label: '$_catSliderValue',
+              ),
+            ),
+            Text(
+              _catSliderValue == 0
+                  ? '1 week'
+                  : _catSliderValue == 1
+                      ? '2 weeks'
+                      : '1 month',
+              style: TextStyle(
+                color: Color.fromARGB(255, 91, 90, 90),
+                fontSize: 18.0,
+              ),
             ),
             SizedBox(height: 50),
             Row(
@@ -128,7 +238,33 @@ class _NewReportsPageState extends State<NewReportsPage> {
               height: 200, // provide a specific height
               width: 400,
               child: BarChartWidget(
-                  chartData: getJsonData('reportsData.json', 'weight')),
+                chartData: getJsonData('symptoms.json', 'weight', weightRange),
+                color: Color.fromARGB(255, 249, 198, 132),
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              height: 10, // provide a specific height
+              width: 200,
+              child: Slider(
+                value: _weightSliderValue.toDouble(),
+                min: 0,
+                max: 2,
+                divisions: 2,
+                onChanged: _onWeightSliderValueChanged,
+                label: '$_weightSliderValue',
+              ),
+            ),
+            Text(
+              _weightSliderValue == 0
+                  ? '1 week'
+                  : _weightSliderValue == 1
+                      ? '2 weeks'
+                      : '1 month',
+              style: TextStyle(
+                color: Color.fromARGB(255, 91, 90, 90),
+                fontSize: 18.0,
+              ),
             ),
           ],
         ),
@@ -136,7 +272,24 @@ class _NewReportsPageState extends State<NewReportsPage> {
     );
   }
 
-  List<MyData> getJsonData(String dataSource, String symptom) {
+  // List<MyData> getJsonData(String dataSource, String symptom) {
+  //   String filePath =
+  //       '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
+  //           dataSource;
+  //   final File jsonFile = File(filePath);
+  //   String jsonString = jsonFile.readAsStringSync();
+  //   final List<dynamic> jsonData = jsonDecode(jsonString);
+
+  //   final List<MyData> chartData = jsonData.map((data) {
+  //     final double catScore =
+  //         data[symptom] != null ? data[symptom].toDouble() : 0.0;
+  //     return MyData(DateTime.parse(data['date']), catScore);
+  //   }).toList();
+
+  //   return chartData;
+  // }
+
+  List<MyData> getJsonData(String dataSource, String symptom, int range) {
     String filePath =
         '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
             dataSource;
@@ -144,14 +297,77 @@ class _NewReportsPageState extends State<NewReportsPage> {
     String jsonString = jsonFile.readAsStringSync();
     final List<dynamic> jsonData = jsonDecode(jsonString);
 
+    DateTime startDate;
+    if (range == 0) {
+      startDate = DateTime.now().subtract(Duration(days: 7));
+    } else if (range == 1) {
+      startDate = DateTime.now().subtract(Duration(days: 14));
+    } else if (range == 2) {
+      startDate = DateTime.now().subtract(Duration(days: 30));
+    } else {
+      throw Exception("Invalid range value");
+    }
+    //print("startDate: $startDate"); // debugging statement
+
     final List<MyData> chartData = jsonData.map((data) {
+      final DateTime date = DateTime.parse(data['date']);
       final double catScore =
           data[symptom] != null ? data[symptom].toDouble() : 0.0;
-      return MyData(DateTime.parse(data['date']), catScore);
+      return MyData(date, catScore);
     }).toList();
 
-    return chartData;
+    List<MyData> filteredData = chartData.where((data) {
+      return data.date.isAfter(startDate);
+    }).toList();
+    //print(filteredData.length);
+    //print(chartData.length);
+
+    return filteredData;
   }
+
+//   List<MyData?> getJsonData(String dataSource, String symptom, int range) {
+//   String filePath =
+//       '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
+//           dataSource;
+//   final File jsonFile = File(filePath);
+//   String jsonString = jsonFile.readAsStringSync();
+//   final List<dynamic> jsonData = jsonDecode(jsonString);
+//   //List<MyData> emptyData = List<MyData>.filled(7, ['2023-02-01', 0]);
+
+//   final DateTime now = DateTime.now();
+//   DateTime startDate = now;
+
+//   switch (range) {
+//     case 0: // last week
+//       startDate = now.subtract(Duration(days: 7));
+//       break;
+//     case 1: // last two weeks
+//       startDate = now.subtract(Duration(days: 14));
+//       break;
+//     case 2: // last month
+//       startDate = now.subtract(Duration(days: 30));
+//       break;
+//     default: // invalid range, return empty list
+//       //return emptyData;
+//   }
+
+//   final List<MyData?> chartData = jsonData
+//       .map((data) {
+//         final DateTime date = DateTime.parse(data['date']);
+//         if (date.isAfter(startDate)) {
+//           final double catScore =
+//               data[symptom] != null ? data[symptom].toDouble() : 0.0;
+//           return MyData(date, catScore);
+//         } else {
+//           return null;
+//         }
+//       })
+//       .where((data) => data != null)
+//       .toList();
+
+//   return chartData;
+// }
+
 }
 
 class MyData {
@@ -214,8 +430,9 @@ class MyLineChart extends StatelessWidget {
 
 class BarChartWidget extends StatefulWidget {
   final List<MyData> chartData;
+  final Color color;
 
-  BarChartWidget({required this.chartData});
+  BarChartWidget({required this.chartData, required this.color});
 
   @override
   _BarChartWidgetState createState() => _BarChartWidgetState();
@@ -233,6 +450,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         domainFn: (MyData data, _) => data.date,
         measureFn: (MyData data, _) => data.value,
         data: widget.chartData,
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(widget.color),
       ),
     ];
 
