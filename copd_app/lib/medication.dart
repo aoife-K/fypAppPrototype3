@@ -40,7 +40,7 @@ class _MedicationsPageState extends State<MedicationsPage> {
             SizedBox(height: 150),
             Text("Medications",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 91, 90, 90),
+                  //color: Color.fromARGB(255, 91, 90, 90),
                   fontSize: 25.0,
                 )),
             IconButton(

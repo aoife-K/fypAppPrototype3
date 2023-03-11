@@ -12,6 +12,10 @@ class _SignupPageState extends State<SignupPage> {
   final AuthService _auth = AuthService();
   String _email = '';
   String _password = '';
+  String _firstName = '';
+  String _lastName = '';
+  bool checkedValue = false;
+  //bool newValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,46 @@ class _SignupPageState extends State<SignupPage> {
                             TextFormField(
                               validator: (String? value) {
                                 if (value!.isEmpty) {
+                                  return 'Please enter your first name';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _firstName = value.trim();
+                                });
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'First Name',
+                                hintText: 'Enter your first name',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            TextFormField(
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your last name';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _lastName = value.trim();
+                                });
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Last Name',
+                                hintText: 'Enter your last name',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            TextFormField(
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
                                   return 'Please enter your email';
                                 }
                                 return null;
@@ -113,6 +157,25 @@ class _SignupPageState extends State<SignupPage> {
                                 labelText: 'Password',
                                 hintText: 'Enter your password',
                               ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            CheckboxListTile(
+                              title: Text(
+                                  "I agree to the Terms of Service and Privacy Policy"),
+                              value: checkedValue,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  if (newValue == true) {
+                                    checkedValue = true;
+                                  } else {
+                                    checkedValue = false;
+                                  }
+                                });
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .leading, //  <-- leading Checkbox
                             ),
                             SizedBox(
                               height: 20.0,

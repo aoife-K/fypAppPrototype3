@@ -549,7 +549,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
           ),
           Text("Welcome, Aoife!",
               style: TextStyle(
-                color: Color.fromARGB(255, 91, 90, 90),
+                //color: Color.fromARGB(255, 91, 90, 90),
                 fontSize: 25.0,
               )),
           SizedBox(height: 40),
@@ -635,13 +635,15 @@ class _GeneratorPageState extends State<GeneratorPage> {
           SizedBox(height: 60),
           Text("Here's this week's summary:",
               style: TextStyle(
-                color: Color.fromARGB(255, 91, 90, 90),
+                //color: Color.fromARGB(255, 91, 90, 90),
                 fontSize: 20.0,
               )),
           SizedBox(height: 20),
           ListTile(
-            title: Text('On average, you\'re taking more steps than last week.',
-                style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))),
+            title: Text(
+              'On average, you\'re taking more steps than last week.',
+              //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
+            ),
             leading: Icon(Icons.directions_walk, color: Colors.green),
             // trailing: Icon(Icons.arrow_forward),
             // onTap: () {
@@ -655,8 +657,10 @@ class _GeneratorPageState extends State<GeneratorPage> {
           ),
           SizedBox(height: 20),
           ListTile(
-            title: Text('Your average weight is 0.5kg lower than last week.',
-                style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))),
+            title: Text(
+              'Your average weight is 0.5kg lower than last week.',
+              //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
+            ),
             //subtitle: Text('See your sleep trends...'),
             leading: Icon(Icons.scale_sharp, color: Colors.orange),
             // trailing: Icon(Icons.arrow_forward),
@@ -672,8 +676,9 @@ class _GeneratorPageState extends State<GeneratorPage> {
           SizedBox(height: 20),
           ListTile(
             title: Text(
-                'Your SPO2 levels have been in a healthy range this week.',
-                style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))),
+              'Your SPO2 levels have been in a healthy range this week.',
+              //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
+            ),
             leading: Icon(Icons.favorite, color: Colors.green),
             // trailing: Icon(Icons.arrow_forward),
             // onTap: () {
@@ -687,8 +692,10 @@ class _GeneratorPageState extends State<GeneratorPage> {
           ),
           SizedBox(height: 20),
           ListTile(
-            title: Text('Your average CAT score is higher than last week.',
-                style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))),
+            title: Text(
+              'Your average CAT score is higher than last week.',
+              //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
+            ),
             leading: Icon(Icons.emoji_emotions, color: Colors.red),
             // trailing: Icon(Icons.arrow_forward),
             // onTap: () {

@@ -185,7 +185,8 @@ class _DiaryPageState extends State<DiaryPage> {
           SizedBox(height: 70),
           Text('Symptom Diary',
               style: TextStyle(
-                  color: Color.fromARGB(255, 28, 28, 28), fontSize: 20)),
+                  //color: Color.fromARGB(255, 28, 28, 28),
+                  fontSize: 20)),
           TableCalendar<String>(
             firstDay: DateTime.utc(2010, 10, 16),
             lastDay: DateTime.utc(2030, 3, 14),
@@ -316,10 +317,12 @@ class _EditableListTileState extends State<EditableListTile> {
       title = widget.title;
     }
     return ListTile(
-      title: Text(title,
-          style: TextStyle(
-            color: Colors.black,
-          )),
+      title: Text(
+        title,
+        // style: TextStyle(
+        //   color: Colors.black,
+        // )
+      ),
       subtitle: isEditing
           ? TextField(
               controller: _textEditingController,
@@ -331,11 +334,11 @@ class _EditableListTileState extends State<EditableListTile> {
                     double.tryParse(value) ?? widget.subtitle);
               },
               style: TextStyle(
-                color: Color.fromARGB(255, 140, 142, 140),
-              ))
+                  //color: Color.fromARGB(255, 140, 142, 140),
+                  ))
           : Text(widget.subtitle.toString(),
               style: TextStyle(
-                color: Color.fromARGB(255, 49, 50, 49),
+                //color: Color.fromARGB(255, 49, 50, 49),
                 fontSize: 18,
               )),
       trailing: Row(
