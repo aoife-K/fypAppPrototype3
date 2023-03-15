@@ -74,6 +74,8 @@ class _CheckInPageState extends State<CheckInPage> {
                                     question = 'Sleep:';
                                   } else if (question == 'energy') {
                                     question = 'Energy:';
+                                  } else if (question == 'total') {
+                                    question = 'Total:';
                                   }
 
                                   return ListTile(

@@ -359,11 +359,33 @@ class _EditableListTileState extends State<EditableListTile> {
                   if (widget.title == 'cat_score') {
                     title = 'CAT Score';
                     content += '\n' + 'Detailed CAT score information: ' + '\n';
+                    String tempTitle = '';
                     for (String key in myMap.keys) {
                       final value = myMap[key];
+                      if (key == 'date') {
+                        tempTitle = 'Date Completed:';
+                      } else if (key == 'cough') {
+                        tempTitle = 'Cough:';
+                      } else if (key == 'phlegm') {
+                        tempTitle = 'Phlegm:';
+                      } else if (key == 'breathlessness') {
+                        tempTitle = 'Breathlessness:';
+                      } else if (key == 'tightness') {
+                        tempTitle = 'Chest Tightness:';
+                      } else if (key == 'activities') {
+                        tempTitle = 'Activities:';
+                      } else if (key == 'confidence') {
+                        tempTitle = 'Confidence:';
+                      } else if (key == 'sleep') {
+                        tempTitle = 'Sleep:';
+                      } else if (key == 'energy') {
+                        tempTitle = 'Energy:';
+                      } else if (key == 'total') {
+                        tempTitle = 'Total:';
+                      }
                       if (value != null) {
                         content +=
-                            ('${key}: ${value.toStringAsFixed(2)}' + '\n');
+                            (tempTitle + ' ${value.toStringAsFixed(2)}' + '\n');
                       } else {
                         content += ('${key}: null' + '\n');
                       }
