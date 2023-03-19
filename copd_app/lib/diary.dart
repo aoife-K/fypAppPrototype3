@@ -245,6 +245,10 @@ class _DiaryPageState extends State<DiaryPage> {
                         subtitle:
                             double.parse('${value.values.elementAt(index)}'),
                         onSubtitleChanged: (newSubtitleValue) {
+                          setState(() {
+                            value['${value.keys.elementAt(index)}'] =
+                                newSubtitleValue;
+                          });
                           onSubtitleChanged(('${value.keys.elementAt(index)}'),
                               newSubtitleValue);
                         },
@@ -293,8 +297,7 @@ class _EditableListTileState extends State<EditableListTile> {
   @override
   void initState() {
     super.initState();
-    _textEditingController =
-        TextEditingController(text: widget.subtitle.toString());
+    _textEditingController = TextEditingController(text: '');
   }
 
   @override
@@ -430,6 +433,7 @@ class _EditableListTileState extends State<EditableListTile> {
                 final newSubtitle =
                     double.tryParse(_textEditingController.text) ??
                         widget.subtitle;
+                print("test" + newSubtitle.toString());
                 widget.onSubtitleChanged(newSubtitle);
                 _updateJsonFile(widget.title, newSubtitle, widget.date);
               }
