@@ -397,11 +397,11 @@ class _NewReportsPageState extends State<NewReportsPage> {
 
     DateTime startDate;
     if (range == 0) {
-      startDate = DateTime.now().subtract(Duration(days: 7));
+      startDate = DateTime.now().subtract(Duration(days: 8));
     } else if (range == 1) {
-      startDate = DateTime.now().subtract(Duration(days: 14));
+      startDate = DateTime.now().subtract(Duration(days: 15));
     } else if (range == 2) {
-      startDate = DateTime.now().subtract(Duration(days: 30));
+      startDate = DateTime.now().subtract(Duration(days: 31));
     } else {
       throw Exception("Invalid range value");
     }

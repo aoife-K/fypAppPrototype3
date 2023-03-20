@@ -108,7 +108,7 @@ class WhatIsCOPDPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //SizedBox(height: 150),
+            SizedBox(height: 350),
             Row(
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

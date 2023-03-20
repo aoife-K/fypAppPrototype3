@@ -529,6 +529,15 @@ class GeneratorPage extends StatefulWidget {
 }
 
 class _GeneratorPageState extends State<GeneratorPage> {
+  bool _isTodayInJsonFile = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the value of _isTodayInJsonFile when the widget is first created
+    _isTodayInJsonFile = isTodayInJsonFile();
+  }
+
   @override
   Widget build(BuildContext context) {
     //return Scaffold(,)
