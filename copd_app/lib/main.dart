@@ -23,23 +23,25 @@ import 'signup.dart';
 import 'auth_service.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeModeNotifier(),
       child: MyApp(),
     ),
   );
-  //WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
-  WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isIOS) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  // //WidgetsFlutterBinding.ensureInitialized();
+  // //await Firebase.initializeApp();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // if (Platform.isIOS) {
+  //   await Firebase.initializeApp(
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
+  // } else {
+  //   await Firebase.initializeApp();
+  // }
+  // FirebaseFirestore db = FirebaseFirestore.instance;
 }
 
 class MyApp extends StatelessWidget {
@@ -78,7 +80,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  //final AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
   String _email = '';
   String _password = '';
 
@@ -170,27 +172,38 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      // TextButton(
-                      //   onPressed: () async {
-                      //     if (_formKey.currentState!.validate()) {
-                      //       dynamic result = await _auth
-                      //           .signInWithEmailAndPassword(_email, _password);
-                      //       if (result == null) {
-                      //         print('Invalid login credentials');
-                      //       } else {
-                      //         Navigator.push(
-                      //             context,
-                      //             MaterialPageRoute(
-                      //                 builder: (_) => MyHomePage()));
-                      //         print('Login successful');
-                      //       }
-                      //     }
-                      //   },
-                      //   child: Text(
-                      //     'Login',
-                      //     style: TextStyle(color: Colors.white, fontSize: 18),
-                      //   ),
-                      // ),
+                      TextButton(
+                        onPressed: () async {
+                          // if (_formKey.currentState!.validate()) {
+                          //   dynamic result = await _auth
+                          //       .signInWithEmailAndPassword(_email, _password);
+                          //   if (result == null) {
+                          //     print('Invalid login credentials');
+                          //   } else {
+                          //     Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (_) => MyHomePage()));
+                          //     print('Login successful');
+                          //   }
+                          // }
+                          try {
+                            final credential = await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                    email: _email, password: _password);
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'user-not-found') {
+                              print('No user found for that email.');
+                            } else if (e.code == 'wrong-password') {
+                              print('Wrong password provided for that user.');
+                            }
+                          }
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -215,18 +228,17 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () async {
-                  //if (_formKey.currentState!.validate()) {
-                  // dynamic result = await _auth.signInWithEmailAndPassword(
-                  //     _email, _password);
-                  // if (result == null) {
-                  //   print('Invalid login credentials');
-                  // } else
-                  {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => MyHomePage()));
-                    print('Login successful');
+                  if (_formKey.currentState!.validate()) {
+                    dynamic result = await _auth.signInWithEmailAndPassword(
+                        _email, _password);
+                    if (result == null) {
+                      print('Invalid login credentials');
+                    } else {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => MyHomePage()));
+                      print('Login successful');
+                    }
                   }
-                  //}
                 },
                 child: Text(
                   'Login',
@@ -545,14 +557,38 @@ class _GeneratorPageState extends State<GeneratorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Consumer<ThemeModeNotifier>(
-            builder: (context, notifier, child) => Switch(
-              value: notifier.isDarkMode,
-              onChanged: (value) {
-                notifier.toggleThemeMode();
-              },
-            ),
+          SizedBox(
+            height: 20,
           ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Expanded(
+              child: ListTile(
+                title: Text('',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 115, 115, 116),
+                        fontSize: 15)),
+                leading: Icon(Icons.exit_to_app,
+                    color: Color.fromARGB(255, 107, 107, 108)),
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Login(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Consumer<ThemeModeNotifier>(
+              builder: (context, notifier, child) => Switch(
+                value: notifier.isDarkMode,
+                onChanged: (value) {
+                  notifier.toggleThemeMode();
+                },
+              ),
+            ),
+          ]),
           SizedBox(
             height: 20,
           ),
@@ -560,7 +596,24 @@ class _GeneratorPageState extends State<GeneratorPage> {
               style: TextStyle(
                 //color: Color.fromARGB(255, 91, 90, 90),
                 fontSize: 25.0,
-              )),
+              ),
+              textAlign: TextAlign.center),
+          // ListTile(
+          //   title: Text('Log Out',
+          //       style: TextStyle(
+          //           color: Color.fromARGB(255, 115, 115, 116), fontSize: 15)),
+          //   leading: Icon(Icons.exit_to_app,
+          //       color: Color.fromARGB(255, 107, 107, 108)),
+          //   onTap: () {
+          //     FirebaseAuth.instance.signOut();
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => Login(),
+          //       ),
+          //     );
+          //   },
+          // ),
           SizedBox(height: 40),
           // Container(
           //   child: isTodayInJsonFile()
