@@ -22,7 +22,7 @@ import 'reportsNew.dart';
 import 'signup.dart';
 import 'auth_service.dart';
 
-Future main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(

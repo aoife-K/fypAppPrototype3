@@ -1,0 +1,161 @@
+[
+  {
+    "userId": "a65MVcvZvvP8OBPgW9BSdn5FeFq1",
+    "firstName": "Aoife",
+    "surname": "Khan",
+    "symptoms": [
+      {
+        "date": "2023-03-14",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-15",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-16",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-17",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-18",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-19",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-20",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      },
+      {
+        "date": "2023-03-21",
+        "cat_score": {
+          "cough": 1.0,
+          "phlegm": 1.0,
+          "tightness": 5.0,
+          "breathlessness": 1.0,
+          "activities": 5.0,
+          "confidence": 1.0,
+          "sleep": 1.0,
+          "energy": 1.0,
+          "total": 16.0
+        },
+        "weight": 70.9,
+        "steps": 5524,
+        "spo2": 95.2,
+        "temperature": 37.4,
+        "fev1": 92.2
+      }
+    ]
+  }
+]

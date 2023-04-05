@@ -389,8 +389,7 @@ class _NewReportsPageState extends State<NewReportsPage> {
 
   List<MyData> getJsonData(String dataSource, String symptom, int range) {
     String filePath =
-        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
-            dataSource;
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/$dataSource';
     final File jsonFile = File(filePath);
     String jsonString = jsonFile.readAsStringSync();
     final List<dynamic> jsonData = jsonDecode(jsonString);
@@ -405,20 +404,17 @@ class _NewReportsPageState extends State<NewReportsPage> {
     } else {
       throw Exception("Invalid range value");
     }
-    //print("startDate: $startDate"); // debugging statement
 
     final List<MyData> chartData = jsonData.map((data) {
       final DateTime date = DateTime.parse(data['date']);
-      final double catScore =
+      final double symptomValue =
           data[symptom] != null ? data[symptom].toDouble() : 0.0;
-      return MyData(date, catScore);
+      return MyData(date, symptomValue);
     }).toList();
 
     List<MyData> filteredData = chartData.where((data) {
       return data.date.isAfter(startDate);
     }).toList();
-    //print(filteredData.length);
-    //print(chartData.length);
 
     return filteredData;
   }

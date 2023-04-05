@@ -1,4 +1,6 @@
 //https://pub.dev/packages/table_calendar
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ffi';
 import 'dart:convert';
 import 'dart:io';
@@ -8,6 +10,11 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DiaryPage extends StatefulWidget {
   @override
@@ -44,25 +51,20 @@ class _DiaryPageState extends State<DiaryPage> {
     super.dispose();
   }
 
-  //This function doesn't work yet - problems with accessing file, not sure if the rest of the function works after that
-  Map<String, double> _getJsonData(DateTime date) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String dateEntered = formatter.format(date);
-    //print(dateEntered);
-    // Read JSON data from file
-    // final String response =
-    //     rootBundle.loadString('assets/symptoms.json').toString();
-    var dir = getApplicationDocumentsDirectory();
-    File jsonFile = File(
-        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
-    //print("jsonFile: ");
-    //print(jsonFile.toString());
-    jsonFile.readAsString().then((String contents) {
-      //print("contents: ");
-      //print(contents);
-    });
-    jsonFile.existsSync();
-    String jsonString = jsonFile.readAsStringSync();
+  // String _getFirebaseData(String user) {
+  //   String data = '';
+  //   FirebaseDatabase database = FirebaseDatabase.instance;
+  //   DatabaseReference symptomDateRef =
+  //       FirebaseDatabase.instance.ref('$user/symptoms');
+  //   symptomDateRef.onValue.listen((DatabaseEvent event) {
+  //     data = event.snapshot.value.toString();
+  //     print(data);
+  //   });
+  //   return data;
+  // }
+
+  Future<Map<String, double>> _getJsonData(DateTime date) async {
+    FirebaseDatabase database = FirebaseDatabase.instance;
     Map<String, double> emptyData = {
       'CAT Score': 0,
       'Weight (kg)': 0,
@@ -71,6 +73,55 @@ class _DiaryPageState extends State<DiaryPage> {
       'Temperature (°C)': 0,
       'FEV1 (%)': 0
     };
+
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String dateEntered = formatter.format(date);
+
+    for (int i = 0; i <= 8; i++) {
+      DatabaseReference symptomDateRef =
+          FirebaseDatabase.instance.ref('0/symptoms/$i/date');
+      final snapshot = await symptomDateRef.get();
+      String dataString = snapshot.value.toString();
+      if (dataString == dateEntered) {
+        DatabaseReference symptomDateRef =
+            FirebaseDatabase.instance.ref('0/symptoms/$i');
+        DatabaseReference catRef =
+            FirebaseDatabase.instance.ref('0/symptoms/$i/cat_score/total');
+
+        final snapshot = await symptomDateRef.get();
+        final filteredData = snapshot.value;
+        //print(filteredData);
+
+        final snapshot2 = await catRef.get();
+        final catScore = snapshot2.value;
+
+        if (filteredData is Map) {
+          Map<String, double> myMap = {};
+          filteredData.forEach((key, value) {
+            if (key == 'date') return;
+            if (value is Map) {
+              myMap[key.toString()] = catScore as double;
+            } else if (value is int) {
+              myMap[key.toString()] = value.toDouble();
+            } else {
+              myMap[key.toString()] = value;
+            }
+          });
+          myMap['cat_score'] = catScore as double;
+          print(myMap);
+          return myMap;
+        }
+      }
+    }
+    return emptyData;
+
+    // Read JSON data from file
+    var dir = getApplicationDocumentsDirectory();
+    File jsonFile = File(
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
+    jsonFile.readAsString().then((String contents) {});
+    jsonFile.existsSync();
+    String jsonString = jsonFile.readAsStringSync();
 
     // Parse JSON data into a List of maps
     List<dynamic> jsonData = jsonDecode(jsonString);
@@ -86,6 +137,9 @@ class _DiaryPageState extends State<DiaryPage> {
     if (matchingMap != null) {
       Map<String, double> values = {};
       for (var entry in matchingMap.entries) {
+        // if (entry.key == 'cat_score') {
+        //   values[entry.key] = 0;
+        // }
         if (entry.key != 'date') {
           values[entry.key] = entry.value.toDouble();
         }
@@ -95,26 +149,6 @@ class _DiaryPageState extends State<DiaryPage> {
 
     // If no matching map was found, return empty list
     return emptyData;
-  }
-
-  List<String> _getEventsForDay(DateTime day) {
-    // Implementation example
-    List<String> symptoms = [
-      "CAT Score: ",
-      "Weight (kg): ",
-      "Steps: ",
-      "SpO2 (%): ",
-      "Temperature (°C): ",
-      "FEV1 (%): "
-    ];
-    var hashMap = Map<String, double>();
-    hashMap['CAT'] = 0;
-    hashMap['Weight (kg)'] = 0;
-    hashMap['Steps'] = 0;
-    hashMap['SpO2 (%)'] = 0;
-    hashMap['Temperature (°C)'] = 0;
-    hashMap['FEV1 (%)'] = 0;
-    return symptoms;
   }
 
   Map<String, double> _getValuesForDay(DateTime day) {
@@ -143,7 +177,7 @@ class _DiaryPageState extends State<DiaryPage> {
   //   ];
   // }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
@@ -153,7 +187,7 @@ class _DiaryPageState extends State<DiaryPage> {
         _rangeSelectionMode = RangeSelectionMode.toggledOff;
       });
 
-      _selectedEvents.value = _getJsonData(selectedDay);
+      _selectedEvents.value = await _getJsonData(selectedDay);
       //_dailyValues.value = _getValuesForDay(selectedDay);
     }
   }
@@ -241,16 +275,16 @@ class _DiaryPageState extends State<DiaryPage> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: EditableListTile(
-                        title: ('${value.keys.elementAt(index)}'),
+                        title: (value.keys.elementAt(index)),
                         subtitle:
                             double.parse('${value.values.elementAt(index)}'),
                         onSubtitleChanged: (newSubtitleValue) {
                           setState(() {
-                            value['${value.keys.elementAt(index)}'] =
+                            value[value.keys.elementAt(index)] =
                                 newSubtitleValue;
                           });
-                          onSubtitleChanged(('${value.keys.elementAt(index)}'),
-                              newSubtitleValue);
+                          onSubtitleChanged(
+                              (value.keys.elementAt(index)), newSubtitleValue);
                         },
                         date: _focusedDay,
                       ),
@@ -290,14 +324,66 @@ class EditableListTile extends StatefulWidget {
   _EditableListTileState createState() => _EditableListTileState();
 }
 
+// Future<Map<String, double>> _getCatFirebase(DateTime date) async {
+//   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+//   final String dateEntered = formatter.format(date);
+//   Map<String, double> emptyData = {
+//     "cough": 0,
+//     "phlegm": 0,
+//     "tightness": 0,
+//     "breathlessness": 0,
+//     "activities": 0,
+//     "confidence": 0,
+//     "sleep": 0,
+//     "energy": 0,
+//     "total": 0
+//   };
+
+//   FirebaseDatabase database = FirebaseDatabase.instance;
+
+//   for (int i = 0; i <= 8; i++) {
+//     DatabaseReference symptomDateRef =
+//         FirebaseDatabase.instance.ref('0/symptoms/$i/date');
+//     final snapshot = await symptomDateRef.get();
+//     String dataString = snapshot.value.toString();
+//     if (dataString == dateEntered) {
+//       DatabaseReference catRef =
+//           FirebaseDatabase.instance.ref('0/symptoms/$i/cat_score');
+
+//       final snapshot2 = await catRef.get();
+//       final catScore = snapshot2.value;
+//       print(catScore);
+
+//       if (catScore is Map) {
+//         Map<String, double> myMap = {};
+//         catScore.forEach((key, value) {
+//           if (key == 'date') return;
+//           if (value is int) {
+//             myMap[key.toString()] = value.toDouble();
+//           } else {
+//             myMap[key.toString()] = value;
+//           }
+//         });
+//         print(myMap);
+//         return myMap;
+//       }
+//     }
+//   }
+//   return emptyData;
+// }
+
 class _EditableListTileState extends State<EditableListTile> {
   bool isEditing = false;
   late TextEditingController _textEditingController;
+  Map<String, double> catData = {};
+  //Map<String, double> myMap = {};
 
   @override
   void initState() {
     super.initState();
     _textEditingController = TextEditingController(text: '');
+    //myMap = await _getCatData(widget.date);
+    //print(myMap);
   }
 
   @override
@@ -532,10 +618,6 @@ class _EditableListTileState extends State<EditableListTile> {
   Map<String, double> _getCatData(DateTime date) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String dateEntered = formatter.format(date);
-    File jsonFile = File(
-        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/cat.json');
-    jsonFile.existsSync();
-    String jsonString = jsonFile.readAsStringSync();
     Map<String, double> emptyData = {
       "cough": 0,
       "phlegm": 0,
@@ -547,6 +629,11 @@ class _EditableListTileState extends State<EditableListTile> {
       "energy": 0,
       "total": 0
     };
+
+    File jsonFile = File(
+        '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/cat.json');
+    jsonFile.existsSync();
+    String jsonString = jsonFile.readAsStringSync();
 
     // Parse JSON data into a List of maps
     List<dynamic> jsonData = jsonDecode(jsonString);

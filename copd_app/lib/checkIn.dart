@@ -30,18 +30,10 @@ class _CheckInPageState extends State<CheckInPage> {
                   final task = snapshot.data!;
                   return SurveyKit(
                     onResult: (SurveyResult result) async {
-                      print(result.finishReason);
                       final jsonResult = surveyResultsToJson(result);
-                      // print the json-formatted results
-                      //debugPrint(jsonEncode(jsonResult));
-                      //print(jsonResult.length);
                       Map<String, dynamic> resultMap = jsonToMap(jsonResult);
-                      print(resultMap);
                       if (result.finishReason == FinishReason.COMPLETED) {
                         writeJsonFile(resultMap);
-
-                        //writeJsonFile(resultMap);
-                        // Navigator.pushNamed(context, '/');
                         await showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
