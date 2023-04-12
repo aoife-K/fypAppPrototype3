@@ -334,6 +334,8 @@ class _CheckInPageState extends State<CheckInPage> {
       jsonData.add(data);
     }
 
+    //additional code to store detailed cat values in another file
+
     // Write the updated data to the file
     jsonFile.writeAsStringSync(jsonEncode(jsonData));
 

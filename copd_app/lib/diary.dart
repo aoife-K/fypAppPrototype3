@@ -7,7 +7,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class DiaryPage extends StatefulWidget {
   @override
@@ -86,7 +85,6 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 
   Map<String, double> _getValuesForDay(DateTime day) {
-    // Implementation example
     var hashMap = Map<String, double>();
     hashMap['CAT Score'] = 0;
     hashMap['Weight (kg)'] = 0;
