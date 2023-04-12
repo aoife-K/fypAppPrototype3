@@ -1,4 +1,3 @@
-//import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:survey_kit/survey_kit.dart';
@@ -9,16 +8,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:copd_app/custom_expansion_tile.dart';
 
 import 'contacts.dart';
 import 'info.dart';
 import 'medication.dart';
-import 'reports.dart';
 import 'diary.dart';
 import 'checkIn.dart';
 import 'reportsNew.dart';
-//import 'login.dart';
 import 'signup.dart';
 import 'auth_service.dart';
 
@@ -31,17 +27,6 @@ void main() async {
       child: MyApp(),
     ),
   );
-  // //WidgetsFlutterBinding.ensureInitialized();
-  // //await Firebase.initializeApp();
-  // WidgetsFlutterBinding.ensureInitialized();
-  // if (Platform.isIOS) {
-  //   await Firebase.initializeApp(
-  //     options: DefaultFirebaseOptions.currentPlatform,
-  //   );
-  // } else {
-  //   await Firebase.initializeApp();
-  // }
-  // FirebaseFirestore db = FirebaseFirestore.instance;
 }
 
 class MyApp extends StatelessWidget {
@@ -58,13 +43,6 @@ class MyApp extends StatelessWidget {
         themeMode: Provider.of<ThemeModeNotifier>(context).isDarkMode
             ? ThemeMode.dark
             : ThemeMode.light,
-        // ThemeData(
-        //   useMaterial3: true,
-        //   colorScheme: ColorScheme.fromSeed(
-        //     seedColor: Colors.white,
-        //   ),
-        //   //backgroundColor: Colors.white,
-        // ),
         home: Login(),
       ),
     );
@@ -88,9 +66,6 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   title: Text("Login Page"),
-      // ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -111,18 +86,13 @@ class _LoginState extends State<Login> {
                 child: Container(
                   width: 200,
                   height: 150,
-                  /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
                   child: Text('COPD Symptom Tracker',
                       style: TextStyle(fontSize: 35),
                       textAlign: TextAlign.center),
-                  //color: Colors.blue,
                 ),
               ),
             ),
             Padding(
-              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
@@ -174,19 +144,6 @@ class _LoginState extends State<Login> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          // if (_formKey.currentState!.validate()) {
-                          //   dynamic result = await _auth
-                          //       .signInWithEmailAndPassword(_email, _password);
-                          //   if (result == null) {
-                          //     print('Invalid login credentials');
-                          //   } else {
-                          //     Navigator.push(
-                          //         context,
-                          //         MaterialPageRoute(
-                          //             builder: (_) => MyHomePage()));
-                          //     print('Login successful');
-                          //   }
-                          // }
                           try {
                             final credential = await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
@@ -209,16 +166,6 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-
-            // TextButton(
-            //   onPressed: () {
-            //     //TODO FORGOT PASSWORD SCREEN GOES HERE
-            //   },
-            //   child: Text(
-            //     'Forgot Password?',
-            //     style: TextStyle(color: Colors.blue, fontSize: 15),
-            //   ),
-            // ),
             SizedBox(height: 30),
             Container(
               height: 50,
@@ -275,93 +222,6 @@ class _LoginState extends State<Login> {
   }
 }
 
-// class Login extends StatefulWidget {
-//   @override
-//   _LoginState createState() => _LoginState();
-// }
-
-// class _LoginState extends State<Login> {
-//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//   final AuthService _auth = AuthService();
-//   String _email = '';
-//   String _password = '';
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Login'),
-//       ),
-//       body: Container(
-//         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               TextFormField(
-//                 validator: (String? value) {
-//                   if (value!.isEmpty) {
-//                     return 'Please enter your email';
-//                   }
-//                   return null;
-//                 },
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _email = value.trim();
-//                   });
-//                 },
-//                 decoration: InputDecoration(
-//                   labelText: 'Email',
-//                   hintText: 'Enter your email',
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 20.0,
-//               ),
-//               TextFormField(
-//                 validator: (String? value) {
-//                   if (value!.isEmpty) {
-//                     return 'Please enter your password';
-//                   }
-//                   return null;
-//                 },
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _password = value.trim();
-//                   });
-//                 },
-//                 obscureText: true,
-//                 decoration: InputDecoration(
-//                   labelText: 'Password',
-//                   hintText: 'Enter your password',
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 20.0,
-//               ),
-//               ElevatedButton(
-//                 onPressed: () async {
-//                   if (_formKey.currentState!.validate()) {
-//                     dynamic result = await _auth.signInWithEmailAndPassword(
-//                         _email, _password);
-//                     if (result == null) {
-//                       print('Invalid login credentials');
-//                     } else {
-//                       print('Login successful');
-//                     }
-//                   }
-//                 },
-//                 child: Text('Login'),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -373,7 +233,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _pages = [
     GeneratorPage(),
     CheckInPage(),
-    //ReportsPage(),
     DiaryPage(),
     ContactPage(),
     MedicationsPage(),
@@ -389,7 +248,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _pages = [
       GeneratorPage(),
       CheckInPage(),
-      //ReportsPage(),
       DiaryPage(),
       ContactPage(),
       MedicationsPage(),
@@ -437,20 +295,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
-        // body: Container(
-        //   color: Theme.of(context).colorScheme.primaryContainer,
-        //   child: page,
-        // ),
         body: IndexedStack(
           index: selectedIndex,
           children: _pages,
         ),
-        // body: PageView(
-        //   controller: _pageController,
-        //   //color: Theme.of(context).colorScheme.primaryContainer,
-        //   physics: NeverScrollableScrollPhysics(),
-        //   children: _pages,
-        // ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
@@ -470,15 +318,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               label: 'Check-In',
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.summarize_outlined,
-            //       color: Color.fromARGB(255, 146, 145, 145)),
-            //   activeIcon: Icon(
-            //     Icons.summarize_outlined,
-            //     color: Color.fromARGB(255, 58, 189, 198),
-            //   ),
-            //   label: 'Reports',
-            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month,
                   color: Color.fromARGB(255, 146, 145, 145)),
@@ -521,13 +360,6 @@ class _MyHomePageState extends State<MyHomePage> {
               selectedIndex = value;
             });
           },
-          // currentIndex: _selectedPageIndex,
-          // onTap: (selectedPageIndex) {
-          //   setState(() {
-          //     _selectedPageIndex = selectedPageIndex;
-          //     _pageController.jumpToPage(selectedPageIndex);
-          //   });
-          // },
           fixedColor: Color.fromARGB(255, 121, 119, 119),
         ),
       );
@@ -598,28 +430,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 fontSize: 25.0,
               ),
               textAlign: TextAlign.center),
-          // ListTile(
-          //   title: Text('Log Out',
-          //       style: TextStyle(
-          //           color: Color.fromARGB(255, 115, 115, 116), fontSize: 15)),
-          //   leading: Icon(Icons.exit_to_app,
-          //       color: Color.fromARGB(255, 107, 107, 108)),
-          //   onTap: () {
-          //     FirebaseAuth.instance.signOut();
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => Login(),
-          //       ),
-          //     );
-          //   },
-          // ),
           SizedBox(height: 40),
-          // Container(
-          //   child: isTodayInJsonFile()
-          //       ? Text('This text is displayed when isTrue is true')
-          //       : Text('This text is displayed when isTrue is false'),
-          // ),
           Card(
             //elevation: 3,
             color: Color.fromARGB(255, 249, 251, 251),
@@ -633,18 +444,9 @@ class _GeneratorPageState extends State<GeneratorPage> {
                   ? Color.fromARGB(255, 199, 233, 235)
                   : Color.fromARGB(255, 240, 210, 198),
               child: Center(
-                  // onDoubleTap: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => CheckInPage(),
-                  //     ),
-                  //   );
-                  // },
                   child: GestureDetector(
                 onTap: () {
                   if (!isTodayInJsonFile()) {
-                    // Replace with your navigation code
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -668,30 +470,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                           fontSize: 18.0,
                         ),
                       ),
-              )
-                  // child: isTodayInJsonFile()
-                  //     ? Text(
-                  //         "Your daily check-in is complete!",
-                  //         style: TextStyle(
-                  //           color: Color.fromARGB(255, 30, 148, 168),
-                  //           fontSize: 18.0,
-                  //         ),
-                  //       )
-                  //     : Text(
-                  //         "Your daily check-in is incomplete! Tap here to complete it.",
-                  //         style: TextStyle(
-                  //           color: Color.fromARGB(255, 234, 105, 96),
-                  //           fontSize: 18.0,
-                  //         ),
-                  //       ),
-                  // child: Text(
-                  //   "Your daily check-in is complete!",
-                  //   style: TextStyle(
-                  //     color: Color.fromARGB(255, 30, 148, 168),
-                  //     fontSize: 18.0,
-                  //   ),
-                  // ),
-                  ),
+              )),
             ),
           ),
           SizedBox(height: 60),
@@ -707,15 +486,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
               //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
             ),
             leading: Icon(Icons.directions_walk, color: Colors.green),
-            // trailing: Icon(Icons.arrow_forward),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => ReportsPage(),
-            //     ),
-            //   );
-            // },
           ),
           SizedBox(height: 20),
           ListTile(
@@ -723,17 +493,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
               'Your average weight is 0.5kg lower than last week.',
               //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
             ),
-            //subtitle: Text('See your sleep trends...'),
             leading: Icon(Icons.scale_sharp, color: Colors.orange),
-            // trailing: Icon(Icons.arrow_forward),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => GraphsPage(),
-            //     ),
-            //   );
-            // },
           ),
           SizedBox(height: 20),
           ListTile(
@@ -742,15 +502,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
               //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
             ),
             leading: Icon(Icons.favorite, color: Colors.green),
-            // trailing: Icon(Icons.arrow_forward),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => GraphsPage(),
-            //     ),
-            //   );
-            // },
           ),
           SizedBox(height: 20),
           ListTile(
@@ -759,15 +510,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
               //style: TextStyle(color: Color.fromARGB(255, 130, 131, 130))
             ),
             leading: Icon(Icons.emoji_emotions, color: Colors.red),
-            // trailing: Icon(Icons.arrow_forward),
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => GraphsPage(),
-            //     ),
-            //   );
-            // },
           ),
           SizedBox(height: 60),
           ListTile(
@@ -784,20 +526,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
               );
             },
           ),
-          //SizedBox(height: 150),
-          // ListTile(
-          //   title: Text('Settings'),
-          //   leading: Icon(Icons.settings),
-          //   trailing: Icon(Icons.more_horiz),
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => SettingsPage(),
-          //       ),
-          //     );
-          //   },
-          // ),
         ],
       ),
     );
@@ -836,57 +564,3 @@ class ThemeModeNotifier with ChangeNotifier {
     notifyListeners();
   }
 }
-
-// class GraphsPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Material(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           BackButton(),
-//           Text("Reports",
-//               style: TextStyle(
-//                 color: Color.fromARGB(255, 91, 90, 90),
-//                 fontSize: 25.0,
-//               )),
-//           Text(
-//               "See your sleep trends, steps taken, and more over the past weeks and months.",
-//               style: TextStyle(
-//                 color: Color.fromARGB(255, 91, 90, 90),
-//                 fontSize: 15.0,
-//               )),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class BigCard extends StatelessWidget {
-//   const BigCard({
-//     Key? key,
-//     required this.pair,
-//   }) : super(key: key);
-
-//   //final WordPair pair;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var theme = Theme.of(context);
-//     var style = theme.textTheme.displayMedium!.copyWith(
-//       color: theme.colorScheme.onPrimary,
-//     );
-
-//     return Card(
-//       color: theme.colorScheme.primary,
-//       child: Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Text(
-//           pair.asLowerCase,
-//           style: style,
-//           semanticsLabel: pair.asPascalCase,
-//         ),
-//       ),
-//     );
-//   }
-// }

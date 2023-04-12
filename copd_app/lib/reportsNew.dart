@@ -1,9 +1,5 @@
 //https://pub.dev/packages/fl_chart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'bar_chart.dart';
-import 'line_chart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'dart:convert';
 import 'dart:io';
@@ -370,23 +366,6 @@ class _NewReportsPageState extends State<NewReportsPage> {
     );
   }
 
-  // List<MyData> getJsonData(String dataSource, String symptom) {
-  //   String filePath =
-  //       '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
-  //           dataSource;
-  //   final File jsonFile = File(filePath);
-  //   String jsonString = jsonFile.readAsStringSync();
-  //   final List<dynamic> jsonData = jsonDecode(jsonString);
-
-  //   final List<MyData> chartData = jsonData.map((data) {
-  //     final double catScore =
-  //         data[symptom] != null ? data[symptom].toDouble() : 0.0;
-  //     return MyData(DateTime.parse(data['date']), catScore);
-  //   }).toList();
-
-  //   return chartData;
-  // }
-
   List<MyData> getJsonData(String dataSource, String symptom, int range) {
     String filePath =
         '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/$dataSource';
@@ -461,50 +440,6 @@ class _NewReportsPageState extends State<NewReportsPage> {
 
     return double.parse(averageScore.toStringAsFixed(decimalPlaces));
   }
-
-//   List<MyData?> getJsonData(String dataSource, String symptom, int range) {
-//   String filePath =
-//       '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/' +
-//           dataSource;
-//   final File jsonFile = File(filePath);
-//   String jsonString = jsonFile.readAsStringSync();
-//   final List<dynamic> jsonData = jsonDecode(jsonString);
-//   //List<MyData> emptyData = List<MyData>.filled(7, ['2023-02-01', 0]);
-
-//   final DateTime now = DateTime.now();
-//   DateTime startDate = now;
-
-//   switch (range) {
-//     case 0: // last week
-//       startDate = now.subtract(Duration(days: 7));
-//       break;
-//     case 1: // last two weeks
-//       startDate = now.subtract(Duration(days: 14));
-//       break;
-//     case 2: // last month
-//       startDate = now.subtract(Duration(days: 30));
-//       break;
-//     default: // invalid range, return empty list
-//       //return emptyData;
-//   }
-
-//   final List<MyData?> chartData = jsonData
-//       .map((data) {
-//         final DateTime date = DateTime.parse(data['date']);
-//         if (date.isAfter(startDate)) {
-//           final double catScore =
-//               data[symptom] != null ? data[symptom].toDouble() : 0.0;
-//           return MyData(date, catScore);
-//         } else {
-//           return null;
-//         }
-//       })
-//       .where((data) => data != null)
-//       .toList();
-
-//   return chartData;
-// }
-
 }
 
 class MyData {
@@ -539,31 +474,6 @@ class MyLineChart extends StatelessWidget {
     );
   }
 }
-
-// class BarChartWidget extends StatelessWidget {
-//   final List<MyData> chartData;
-
-//   BarChartWidget({required this.chartData});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     List<charts.Series<MyData, DateTime>> seriesList = [
-//       charts.Series<MyData, DateTime>(
-//         id: 'Score',
-//         domainFn: (MyData data, _) => data.date,
-//         measureFn: (MyData data, _) => data.value,
-//         data: chartData,
-//       ),
-//     ];
-
-//     return charts.TimeSeriesChart(
-//       seriesList,
-//       animate: true,
-//       animationDuration: const Duration(milliseconds: 500),
-//       defaultRenderer: charts.BarRendererConfig<DateTime>(),
-//     );
-//   }
-// }
 
 class BarChartWidget extends StatefulWidget {
   final List<MyData> chartData;

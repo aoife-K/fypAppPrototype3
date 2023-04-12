@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-// import 'infoSub1.dart';
-// import 'medication.dart';
 
 class InfoPage extends StatefulWidget {
   @override

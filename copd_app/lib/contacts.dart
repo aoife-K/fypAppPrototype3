@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-//import 'package:copd_app/custom_expansion_tile.dart';
-enum SampleItem { itemOne, itemTwo, itemThree }
 
 class ContactPage extends StatefulWidget {
   @override
@@ -11,7 +7,6 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   bool _customTileExpanded = false;
-  SampleItem? selectedMenu;
 
   List<Widget> _listOfWidgets = [];
   final List<Contact> _contacts = [
@@ -23,7 +18,6 @@ class _ContactPageState extends State<ContactPage> {
   @override
   void initState() {
     super.initState();
-    // Here initialize the list in case it is required
     _listOfWidgets = [];
   }
 

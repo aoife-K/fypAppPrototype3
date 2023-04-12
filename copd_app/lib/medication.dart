@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
-enum SampleItem { itemOne, itemTwo, itemThree }
 
 class MedicationsPage extends StatefulWidget {
   @override
@@ -14,7 +8,6 @@ class MedicationsPage extends StatefulWidget {
 class _MedicationsPageState extends State<MedicationsPage> {
   bool _isEnabled = false;
   bool _customTileExpanded = false;
-  SampleItem? selectedMenu;
 
   List<Widget> _listOfWidgets = [];
   final List<Medication> _medications = [
@@ -26,7 +19,6 @@ class _MedicationsPageState extends State<MedicationsPage> {
   @override
   void initState() {
     super.initState();
-    // Here initialize the list in case it is required
     _listOfWidgets = [];
   }
 
@@ -95,51 +87,11 @@ class _MedicationsPageState extends State<MedicationsPage> {
                 },
               ),
             ),
-            // SizedBox(height: 60),
-            // for (var item in _listOfWidgets) item,
-            // ListTile(
-            //   title: Text('Add New Medication...'),
-            //   trailing: Icon(Icons.add),
-            //   onTap: () {
-            //     setState(() {
-            //       print("fab clicked");
-            //       _addItemToList(); // new method
-            //     });
-            //   },
-            // ),
           ],
         ),
       ),
     );
   }
-
-  // _addItemToList() {
-  //   //<Widget> _listOfWidgets = [];
-  //   List<Widget> tempList =
-  //       _listOfWidgets; // defining a new temporary list which will be equal to our other list
-  //   tempList.add(EditableListTile(
-  //     title: "Medication...",
-  //     subtitle: "Dosage...",
-  //     onDelete: deleteItem(0),
-  //   )); // adding a new item to the list
-
-  //   setState(() {
-  //     _listOfWidgets =
-  //         tempList; // this will trigger a rebuild of the ENTIRE widget, therefore adding our new item to the list!
-  //   });
-  // }
-
-  // VoidCallback deleteItem(int index) {
-  //   // setState(() {
-  //   //   _ListOfWidgets.removeAt(index);
-  //   // });
-  //   print("delete item called");
-  //   return () {
-  //     setState(() {
-  //       _listOfWidgets.removeAt(index);
-  //     });
-  //   };
-  // }
 
   void _showOptionsDialog(BuildContext context, int index) {
     showDialog(

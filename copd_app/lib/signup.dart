@@ -185,16 +185,6 @@ class _SignupPageState extends State<SignupPage> {
                               minWidth: double.infinity,
                               height: 60,
                               onPressed: () async {
-                                // if (_formKey.currentState!.validate()) {
-                                //   dynamic result =
-                                //       await _auth.signUpWithEmailAndPassword(
-                                //           _email, _password);
-                                //   if (result == null) {
-                                //     print('Registration failed');
-                                //   } else {
-                                //     print('Registration successful');
-                                //   }
-                                // }
                                 try {
                                   final credential = await FirebaseAuth.instance
                                       .createUserWithEmailAndPassword(
@@ -229,32 +219,6 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                     ),
-
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(horizontal: 40),
-                    //   child: Container(
-                    //     padding: EdgeInsets.only(top: 3, left: 3),
-                    //     child: MaterialButton(
-                    //       minWidth: double.infinity,
-                    //       height: 60,
-                    //       onPressed: () {},
-                    //       color: Color.fromARGB(255, 85, 197, 200),
-                    //       shape: RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.circular(40)),
-                    //       child: Text(
-                    //         "Sign Up",
-                    //         style: TextStyle(
-                    //           fontWeight: FontWeight.w600,
-                    //           fontSize: 16,
-                    //           color: Colors.white,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -277,11 +241,6 @@ class _SignupPageState extends State<SignupPage> {
                                 color: Color.fromARGB(255, 54, 55, 54)),
                           ),
                         ),
-                        // Text(
-                        //   "Login",
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.w600, fontSize: 18),
-                        // ),
                       ],
                     )
                   ],
@@ -294,90 +253,3 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
-
-// class RegisterPage extends StatefulWidget {
-//   @override
-//   _RegisterPageState createState() => _RegisterPageState();
-// }
-
-// class _RegisterPageState extends State<RegisterPage> {
-//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//   final AuthService _auth = AuthService();
-//   String _email = '';
-//   String _password = '';
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Register'),
-//       ),
-//       body: Container(
-//         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 50.0),
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               TextFormField(
-//                 validator: (String? value) {
-//                   if (value!.isEmpty) {
-//                     return 'Please enter your email';
-//                   }
-//                   return null;
-//                 },
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _email = value.trim();
-//                   });
-//                 },
-//                 decoration: InputDecoration(
-//                   labelText: 'Email',
-//                   hintText: 'Enter your email',
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 20.0,
-//               ),
-//               TextFormField(
-//                 validator: (String? value) {
-//                   if (value!.isEmpty) {
-//                     return 'Please enter your password';
-//                   }
-//                   return null;
-//                 },
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _password = value.trim();
-//                   });
-//                 },
-//                 obscureText: true,
-//                 decoration: InputDecoration(
-//                   labelText: 'Password',
-//                   hintText: 'Enter your password',
-//                 ),
-//               ),
-//               SizedBox(
-//                 height: 20.0,
-//               ),
-//               ElevatedButton(
-//                 onPressed: () async {
-//                   if (_formKey.currentState!.validate()) {
-//                     dynamic result = await _auth.signUpWithEmailAndPassword(
-//                         _email, _password);
-//                     if (result == null) {
-//                       print('Registration failed');
-//                     } else {
-//                       print('Registration successful');
-//                     }
-//                   }
-//                 },
-//                 child: Text('Register'),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

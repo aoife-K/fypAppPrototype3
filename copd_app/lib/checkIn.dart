@@ -1,6 +1,5 @@
 //https://pub.dev/packages/survey_kit
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:survey_kit/survey_kit.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -140,9 +139,6 @@ class _CheckInPageState extends State<CheckInPage> {
                         selectionColor: Colors.cyan,
                         selectionHandleColor: Colors.cyan,
                       ),
-                      // cupertinoOverrideTheme: CupertinoThemeData(
-                      //   primaryColor: Colors.cyan,
-                      // ),
                       outlinedButtonTheme: OutlinedButtonThemeData(
                         style: ButtonStyle(
                           minimumSize: MaterialStateProperty.all(
@@ -261,18 +257,6 @@ class _CheckInPageState extends State<CheckInPage> {
     return resultList;
   }
 
-  // Map<String, dynamic> jsonToMap(List<Map<String, dynamic>> jsonList) {
-  //   DateTime firstDate = DateTime.parse(jsonList.first['date']);
-  //   print(firstDate);
-  //   Map<String, dynamic> resultMap = {};
-  //   for (var json in jsonList) {
-  //     String id = json['id'];
-  //     dynamic result = json['result'];
-  //     resultMap[id] = result;
-  //   }
-  //   return resultMap;
-  // }
-
   Map<String, dynamic> jsonToMap(List<Map<String, dynamic>> jsonList) {
     DateTime firstDate = DateTime.parse(jsonList.first['date']);
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -366,10 +350,6 @@ class _CheckInPageState extends State<CheckInPage> {
       // Replace the cat_score value in the existing object with the total value from the new data
       symptomsJson[symptomsIndex]['cat_score'] = total;
     }
-    // else {
-    //   // Add a new object with the date and total values
-    //   symptomsJson.add({'date': date, 'cat_score': total});
-    // }
 
     // Write the updated data to the symptoms file
     symptomsFile.writeAsStringSync(jsonEncode(symptomsJson));
@@ -490,14 +470,6 @@ class _CheckInPageState extends State<CheckInPage> {
         CompletionStep(
           stepIdentifier: StepIdentifier(id: '321'),
           text: 'Thanks for completing your daily check-in!',
-          // 'Cough: ${resultMap['1']}\n'
-          // 'Phlegm: ${resultMap['2']}\n'
-          // 'Chest tightness: ${resultMap['3']}\n'
-          // 'Breathlessness: ${resultMap['4']}\n'
-          // 'Activities: ${resultMap['5']}\n'
-          // 'Confidence: ${resultMap['6']}\n'
-          // 'Sleep: ${resultMap['7']}\n'
-          // 'Energy levels: ${resultMap['8']}\n',
           title: 'Done!',
           buttonText: 'Submit',
         ),

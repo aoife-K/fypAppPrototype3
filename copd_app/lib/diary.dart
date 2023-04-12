@@ -1,19 +1,12 @@
 //https://pub.dev/packages/table_calendar
-// ignore_for_file: prefer_const_constructors
 
-import 'dart:ffi';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -22,10 +15,7 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage> {
-  //late final ValueNotifier<List<String>> _selectedEvents;
   late final ValueNotifier<Map<String, double>> _selectedEvents;
-  //late final ValueNotifier<List<double>> _selectedEventDetails;
-  //late final ValueNotifier<List<String>> _dailyEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
@@ -41,7 +31,6 @@ class _DiaryPageState extends State<DiaryPage> {
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getValuesForDay(_selectedDay!));
-    //_selectedEventDetails = ValueNotifier(_getValuesForDay(_selectedDay!));
   }
 
   @override
@@ -51,20 +40,7 @@ class _DiaryPageState extends State<DiaryPage> {
     super.dispose();
   }
 
-  // String _getFirebaseData(String user) {
-  //   String data = '';
-  //   FirebaseDatabase database = FirebaseDatabase.instance;
-  //   DatabaseReference symptomDateRef =
-  //       FirebaseDatabase.instance.ref('$user/symptoms');
-  //   symptomDateRef.onValue.listen((DatabaseEvent event) {
-  //     data = event.snapshot.value.toString();
-  //     print(data);
-  //   });
-  //   return data;
-  // }
-
   Future<Map<String, double>> _getJsonData(DateTime date) async {
-    FirebaseDatabase database = FirebaseDatabase.instance;
     Map<String, double> emptyData = {
       'CAT Score': 0,
       'Weight (kg)': 0,
@@ -73,48 +49,6 @@ class _DiaryPageState extends State<DiaryPage> {
       'Temperature (°C)': 0,
       'FEV1 (%)': 0
     };
-
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    final String dateEntered = formatter.format(date);
-
-    for (int i = 0; i <= 8; i++) {
-      DatabaseReference symptomDateRef =
-          FirebaseDatabase.instance.ref('0/symptoms/$i/date');
-      final snapshot = await symptomDateRef.get();
-      String dataString = snapshot.value.toString();
-      if (dataString == dateEntered) {
-        DatabaseReference symptomDateRef =
-            FirebaseDatabase.instance.ref('0/symptoms/$i');
-        DatabaseReference catRef =
-            FirebaseDatabase.instance.ref('0/symptoms/$i/cat_score/total');
-
-        final snapshot = await symptomDateRef.get();
-        final filteredData = snapshot.value;
-        //print(filteredData);
-
-        final snapshot2 = await catRef.get();
-        final catScore = snapshot2.value;
-
-        if (filteredData is Map) {
-          Map<String, double> myMap = {};
-          filteredData.forEach((key, value) {
-            if (key == 'date') return;
-            if (value is Map) {
-              myMap[key.toString()] = catScore as double;
-            } else if (value is int) {
-              myMap[key.toString()] = value.toDouble();
-            } else {
-              myMap[key.toString()] = value;
-            }
-          });
-          myMap['cat_score'] = catScore as double;
-          print(myMap);
-          return myMap;
-        }
-      }
-    }
-    return emptyData;
-
     // Read JSON data from file
     var dir = getApplicationDocumentsDirectory();
     File jsonFile = File(
@@ -167,15 +101,6 @@ class _DiaryPageState extends State<DiaryPage> {
     } else
       return hashMap;
   }
-
-  // List<Event> _getEventsForRange(DateTime start, DateTime end) {
-  //   // Implementation example
-  //   final days = daysInRange(start, end);
-
-  //   return [
-  //     for (final d in days) ..._getEventsForDay(d),
-  //   ];
-  // }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) async {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -324,66 +249,15 @@ class EditableListTile extends StatefulWidget {
   _EditableListTileState createState() => _EditableListTileState();
 }
 
-// Future<Map<String, double>> _getCatFirebase(DateTime date) async {
-//   final DateFormat formatter = DateFormat('yyyy-MM-dd');
-//   final String dateEntered = formatter.format(date);
-//   Map<String, double> emptyData = {
-//     "cough": 0,
-//     "phlegm": 0,
-//     "tightness": 0,
-//     "breathlessness": 0,
-//     "activities": 0,
-//     "confidence": 0,
-//     "sleep": 0,
-//     "energy": 0,
-//     "total": 0
-//   };
-
-//   FirebaseDatabase database = FirebaseDatabase.instance;
-
-//   for (int i = 0; i <= 8; i++) {
-//     DatabaseReference symptomDateRef =
-//         FirebaseDatabase.instance.ref('0/symptoms/$i/date');
-//     final snapshot = await symptomDateRef.get();
-//     String dataString = snapshot.value.toString();
-//     if (dataString == dateEntered) {
-//       DatabaseReference catRef =
-//           FirebaseDatabase.instance.ref('0/symptoms/$i/cat_score');
-
-//       final snapshot2 = await catRef.get();
-//       final catScore = snapshot2.value;
-//       print(catScore);
-
-//       if (catScore is Map) {
-//         Map<String, double> myMap = {};
-//         catScore.forEach((key, value) {
-//           if (key == 'date') return;
-//           if (value is int) {
-//             myMap[key.toString()] = value.toDouble();
-//           } else {
-//             myMap[key.toString()] = value;
-//           }
-//         });
-//         print(myMap);
-//         return myMap;
-//       }
-//     }
-//   }
-//   return emptyData;
-// }
-
 class _EditableListTileState extends State<EditableListTile> {
   bool isEditing = false;
   late TextEditingController _textEditingController;
   Map<String, double> catData = {};
-  //Map<String, double> myMap = {};
 
   @override
   void initState() {
     super.initState();
     _textEditingController = TextEditingController(text: '');
-    //myMap = await _getCatData(widget.date);
-    //print(myMap);
   }
 
   @override
@@ -408,9 +282,6 @@ class _EditableListTileState extends State<EditableListTile> {
     return ListTile(
       title: Text(
         title,
-        // style: TextStyle(
-        //   color: Colors.black,
-        // )
       ),
       subtitle: isEditing
           ? TextField(
@@ -566,54 +437,6 @@ class _EditableListTileState extends State<EditableListTile> {
       }
     }
   }
-
-  // Future<void> _updateJsonFile(
-  //     String title, double newSubtitle, DateTime date) async {
-  //   Map<String, dynamic> emptyData = {
-  //     'date': "",
-  //     'cat_score': 0,
-  //     'weight': 0,
-  //     'steps': 0,
-  //     'spo2': 0,
-  //     'temperature': 0,
-  //     'fev1': 0
-  //   };
-
-  //   if (emptyData.containsKey(title)) {
-  //     emptyData[title] = newSubtitle;
-  //     emptyData['date'] = date;
-  //   }
-
-  //   final DateFormat formatter = DateFormat('yyyy-MM-dd');
-  //   final String dateEntered = formatter.format(date);
-  //   final file = File(
-  //       '/Users/aoifekhan/Documents/fourthYear/fypApp/copd_app/assets/symptoms.json');
-  //   if (await file.exists()) {
-  //     final jsonContent = await file.readAsString();
-  //     final List<dynamic> data = jsonDecode(jsonContent);
-  //     bool dateMatch = false;
-  //     for (var i = 0; i < data.length; i++) {
-  //       final item = data[i];
-  //       final itemDate = DateTime.parse(item['date']);
-  //       if (itemDate.isAtSameMomentAs(date)) {
-  //         data[i][title] = newSubtitle;
-  //         data[i]['date'] = DateFormat('yyyy-MM-dd').format(date);
-  //         await file.writeAsString(jsonEncode(data));
-  //         dateMatch = true;
-  //         break;
-  //       }
-  //     }
-  //     if (!dateMatch) {
-  //       emptyData['date'] = dateEntered;
-  //       data.add(emptyData);
-  //       await file.writeAsString(jsonEncode(data));
-  //     }
-  //   } else {
-  //     emptyData['date'] = dateEntered;
-  //     final data = [emptyData];
-  //     await file.writeAsString(jsonEncode(data));
-  //   }
-  // }
 
   Map<String, double> _getCatData(DateTime date) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
